@@ -65,22 +65,22 @@ void main(void) {
 
   while (1) {
     // Varredura de displays yay!
-    CC1 = 1
+    CC1 = 1;
     LATD = numerosDoDisplay[0];
     Delay1kTCY(5); // 1ms
-    CC1 = 0
-    CC2 = 1
+    CC1 = 0;
+    CC2 = 1;
     LATD = numerosDoDisplay[1];
     Delay1kTCY(5); // 1ms
-    CC2 = 0
-    CC3 = 1
+    CC2 = 0;
+    CC3 = 1;
     LATD = numerosDoDisplay[2];
     Delay1kTCY(5); // 1ms
-    CC3 = 0
-    CC4 = 1
+    CC3 = 0;
+    CC4 = 1;
     LATD = numerosDoDisplay[3];
     Delay1kTCY(5); // 1ms
-    CC4 = 0
+    CC4 = 0;
 
     // Verifica qual botao esta pressionado
     codigoDoBtnPressionado = getKey();
