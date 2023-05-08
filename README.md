@@ -5,6 +5,8 @@
 - Lab 02: Contador BCD crescente e decrescente
 - Lab 03: Contador de números primos e cronômetro
 - Lab 04: Relógio com displays e ajuste
+- Lab 05: Teclado matricial e sistema de acesso
+- Lab 06: Relógio com LCD e Watchdog
 
 ## Testes
 Para compilar os programas é usado o software [MPLAB IDE](https://mplab-ide.software.informer.com/8.9/)
