@@ -26,6 +26,6 @@ void WriteCmdXLCD(unsigned char val);
 void WriteDataXLCD(unsigned char val);
 void putrsXLCD(const rom unsigned char* str);
 void putsXLCD(unsigned char* str);
-void printStrLine(const rom unsigned char* str, char line);
+void printRStrLine(const rom unsigned char* str, char line);
 void printStrLine(unsigned char* str, char line);
 #define putcXLCD WriteDataXLCD

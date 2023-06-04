@@ -71,7 +71,7 @@ void putsXLCD(unsigned char* str) {
   }
 }
 
-void printStrLine(const rom unsigned char* str, char line) {
+void printRStrLine(const rom unsigned char* str, char line) {
   // Only works for 10 char display
   char i = 0;
   if (line == 1) {
