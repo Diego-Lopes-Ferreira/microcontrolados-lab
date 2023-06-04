@@ -101,7 +101,7 @@ void main(void) {
       if (!ajuste) {
         // ajuste do menu
         menu -= 1;
-        if (menu < 0) menu = 3;
+        if (menu < 0) menu = 2;
       } else {
         // ajuste das horas
         switch (ajuste) {
@@ -128,7 +128,7 @@ void main(void) {
       if (!ajuste) {
         // ajuste do menu
         menu += 1;
-        if (menu > 3) menu = 0;
+        if (menu > 2) menu = 0;
       } else {
         // ajuste das horas
         switch (ajuste) {
