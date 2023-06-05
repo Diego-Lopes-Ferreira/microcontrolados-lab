@@ -8,7 +8,7 @@
 // #pragma config PLLDIV = 5          // Prescaler do PLL = 20MHz / 5 = 4MHz
 // #pragma config CPUDIV = OSC4_PLL6  // Fosc -> 96 do PLL / 6 = 16MHz
 
-#pragma config WDT = ON      // Watchdog desativado
+#pragma config WDT = OFF     // Watchdog desativado
 #pragma config WDTPS = 512   // Watchdog 512 x 4ms = 2.048s
 #pragma config PBADEN = OFF  // Pinos do PORTB comecam como digitais
 #pragma config LVP = OFF     // Desabilita gravacao em baixa tensao
@@ -138,10 +138,12 @@ void main(void) {
   INTCONbits.GIEH = 1;  // habilita interrupcoes geral
 
   // INICIALIZACAO LCD
+  ClrWdt();
   OpenXLCD(FOUR_BIT & LINES_5X7);  // Comunicacao nibble e linha para cursor
   WriteCmdXLCD(0x01);              // comando para limpar a tela
   Delay10KTCYx(8);  // Delay da inicializacao do LCD (10000*200n*8 = 16ms)
 
+  ClrWdt();
   WriteCmdXLCD(0x0C);  // Comando para desligar cursor
   WriteCmdXLCD(0x80);  // Comando para colocar na primeira linha
   putrsXLCD("oi");     // Escreve a string salva em ROM
