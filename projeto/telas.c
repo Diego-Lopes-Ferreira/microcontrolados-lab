@@ -1,6 +1,16 @@
 #include "globals.h"
 #include "main.h"
 
+void inicializa_lcd(void) {
+  OpenXLCD(FOUR_BIT & LINES_5X7);  // Comunicacao nibble e linha para cursor
+  WriteCmdXLCD(0x01);              // comando para limpar a tela
+  Delay10KTCYx(8);  // Delay da inicializacao do LCD (10000*200ns*8 = 16ms)
+
+  WriteCmdXLCD(0x0C);    // desliga cursor
+  WriteCmdXLCD(0x80);    // primeira linha
+  putrsXLCD("Projeto");  // Escreve a string salva em ROM
+}
+
 void atualiza_menu(void) {
   if (menu_1 == 0) {
     tela_menu_externo();
@@ -8,26 +18,7 @@ void atualiza_menu(void) {
     tela_menu_interno();
   }
 
-  // TESTE DA LEITURA DE TECLAS
-  // WriteCmdXLCD(0x80);  // primeira linha
-  // tecla_digitada = getKey();
-  // putrsXLCD(" '");
-  // putcXLCD(tecla_digitada);
-  // putrsXLCD("' 1:");
-  // putcXLCD(menu_1 + 0x30);
-  // putrsXLCD(" 2:");
-  // putcXLCD(menu_2 + 0x30);
-  // WriteCmdXLCD(0xC0);  // segunda linha
-  // putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01
-  // putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02
-  // putrsXLCD("C | ");                          // 4 06
-  // putcXLCD(0x30 + (temperatura_atual / 10));  // 1 07
-  // putcXLCD(0x30 + (temperatura_atual % 10));  // 1 08
-  // putrsXLCD("mA | ");                         // 5 13
-  // putcXLCD(0x30 + (pwm1 / 10));               // 1 14
-  // putcXLCD(0x30 + (pwm1 % 10));               // 1 15
-  // putrsXLCD("%");                             // 1 16
-  // imprime_horario(horas, minutos, segundos);
+
 }
 
 void tela_menu_externo(void) {
@@ -121,4 +112,37 @@ void tela_menu_interno(void) {
       putrsXLCD("Ativar      ");
     }
   }
+}
+
+void tela_testes(void) {
+  WriteCmdXLCD(0x80);  // primeira linha
+  putrsXLCD(" '");
+  putcXLCD(tecla_digitada);
+  putrsXLCD("' 1:");
+  putcXLCD(menu_1 + 0x30);
+  putrsXLCD(" 2:");
+  putcXLCD(menu_2 + 0x30);
+  WriteCmdXLCD(0xC0);  // segunda linha
+  putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01
+  putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02
+  putrsXLCD("C | ");                          // 4 06
+  putcXLCD(0x30 + (temperatura_atual / 10));  // 1 07
+  putcXLCD(0x30 + (temperatura_atual % 10));  // 1 08
+  putrsXLCD("mA | ");                         // 5 13
+  putcXLCD(0x30 + (pwm1 / 10));               // 1 14
+  putcXLCD(0x30 + (pwm1 % 10));               // 1 15
+  putrsXLCD("%");                             // 1 16
+  // imprime_horario(horas, minutos, segundos);
+}
+
+void imprime_horario(char h, char m, char s) {
+  putcXLCD(0x30 + (h / 10));
+  putcXLCD(0x30 + (h % 10));
+  putcXLCD(':');
+  putcXLCD(0x30 + (m / 10));
+  putcXLCD(0x30 + (m % 10));
+  putcXLCD(':');
+  putcXLCD(0x30 + (s / 10));
+  putcXLCD(0x30 + (s % 10));
+  putrsXLCD("        ");
 }

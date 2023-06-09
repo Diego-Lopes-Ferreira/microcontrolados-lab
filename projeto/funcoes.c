@@ -1,18 +1,6 @@
 #include "globals.h"
 #include "main.h"
 
-void imprime_horario(char h, char m, char s) {
-  putcXLCD(0x30 + (h / 10));
-  putcXLCD(0x30 + (h % 10));
-  putcXLCD(':');
-  putcXLCD(0x30 + (m / 10));
-  putcXLCD(0x30 + (m % 10));
-  putcXLCD(':');
-  putcXLCD(0x30 + (s / 10));
-  putcXLCD(0x30 + (s % 10));
-  putrsXLCD("        ");
-}
-
 void ajusta_horas(char* horas, char* minutos, char* segundos) {
   if (*segundos >= 60) {
     *segundos = 0;
@@ -94,8 +82,12 @@ void lida_com_o_menu(void) {
       menu_1 = 0;
       posicao_cursor = 1;
     } else if (tecla_digitada == 'E') {
-      menu_2 += 1;
-      posicao_cursor = 1;
+      if (menu_1 == 4) {
+        monitoramento_ativado = !monitoramento_ativado;
+      } else {
+        menu_2 += 1;
+        posicao_cursor = 1;
+      }
     }
     return;
   }  // if (menu_1 > 0 && menu_2 == 0)
@@ -118,22 +110,20 @@ void lida_com_o_menu(void) {
       if (posicao_cursor % 2 == 0 && posicao_cursor < 5 && tecla_digitada > '5')
         return;
       if (menu_1 == 1) {
-        ajustaHorario(tecla_digitada, &horas, &minutos, &segundos);
+        insere_tecla_horario(tecla_digitada, &horas, &minutos, &segundos);
       } else if (menu_1 == 2) {
-        ajustaHorario(tecla_digitada, &horas_alvo, &minutos_alvo,
-                      &segundos_alvo);
+        insere_tecla_horario(tecla_digitada, &horas_alvo, &minutos_alvo,
+                             &segundos_alvo);
       } else if (menu_1 == 3) {
         if (temperatura_alvo == -1) temperatura_alvo = 0;
         temperatura_alvo -= 10 * (temperatura_alvo / 10);
         temperatura_alvo = (temperatura_alvo * 10) + (tecla_digitada - 0x30);
-      } else if (menu_1 == 4) {
-        monitoramento_ativado = !monitoramento_ativado;
       }
     }
   }  // if (menu_1 > 0 && menu_2 == 1)
 }
 
-void ajustaHorario(char n, char* horas, char* minutos, char* segundos) {
+void insere_tecla_horario(char n, char* horas, char* minutos, char* segundos) {
   n -= 0x30;
   if (posicao_cursor == 1) {
     *segundos = n + (10 * (*segundos / 10));
