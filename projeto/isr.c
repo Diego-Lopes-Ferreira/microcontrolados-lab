@@ -1,5 +1,5 @@
-#include "main.h"
 #include "globals.h"
+#include "main.h"
 
 void ISR_Baixa_Prioridade(void);
 void ISR_Alta_Prioridade(void);
@@ -31,6 +31,11 @@ void ISR_Alta_Prioridade(void) {
     }
     WriteTimer0(60);
     INTCONbits.TMR0IF = 0;
+  } else if (PIR1bits.TMR1IF) {
+    PIR1bits.TMR1IF = 0;
+  } else if (PIR1bits.ADIF) {
+    // TODO
+    PIR1bits.ADIF = 0;
   }
 }
 

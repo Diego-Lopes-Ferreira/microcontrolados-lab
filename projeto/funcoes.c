@@ -54,7 +54,7 @@ void lida_com_o_menu(void) {
   if (tecla_pressionada == 1) return;
   tecla_pressionada = 1;
 
-  if (alarme_ligado) {
+  if (alarme_ligado == 1) {
     if (tecla_digitada == 'F') alarme_ligado = 0;
     return;
   }

@@ -4,12 +4,6 @@
 
 #include "xlcd_exsto.h"
 
-#define L0 PORTBbits.RB4
-#define L1 PORTBbits.RB5
-#define L2 PORTBbits.RB6
-#define L3 PORTBbits.RB7
-
-
 void imprime_horario(char h, char m, char s);
 void ajusta_horas(char* horas, char* minutos, char* segundos);
 

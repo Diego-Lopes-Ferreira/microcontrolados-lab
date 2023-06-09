@@ -30,12 +30,12 @@ char tecla_pressionada = 0;
 char monitoramento_ativado = 0;
 char tempo_pausado = 0;
 char alarme_ligado = 0;
-unsigned int pwm1 = 50;
-unsigned int pwm2 = 20;
 
 // Dados
-char temperatura_alvo = 0;   // em graus
-char temperatura_atual = 0;  // em graus
+unsigned int pwm1 = 50;
+unsigned int pwm2 = 20;
+char temperatura_alvo = 0;   // em graus C
+char temperatura_atual = 0;  // em graus C
 char tecla_digitada = ' ';
 
 // Flags
@@ -53,39 +53,49 @@ void main(void) {
   TRISC = 0b00000001;
   TRISD = 0x00;
   TRISE = 0x00;
-  ADCON1 = 0x0F;             // Todas as portas como digitais
+
   INTCON2bits.NOT_RBPU = 0;  // Habilita pull-ups PORTB
 
-  OSCCONbits.IDLEN = 0;  // vai para sleep
-  RCONbits.IPEN = 1;     // habilita prioridade
+  RCONbits.IPEN = 1;  // habilita prioridade
 
-  // Configuracao do TIMER0
+  // TIMER0
   // T = TCY * Prescaler * (MAX - INICIAL)
-  // 0,01s = 200ns * 256 * (255 - 60)
+  // 10ms = 200ns * 256 * (255 - 60)
   OpenTimer0(TIMER_INT_ON &   // habilita interrupcao
              T0_8BIT &        // 16 bits
              T0_SOURCE_INT &  // fonte clock interno
              T0_PS_1_256);    // prescaler em 256
   INTCON2bits.TMR0IP = 1;     // interrupcao TMR0 e de alta prioridade
-  WriteTimer0(60);            // CARGA INICIAL = 60
+  WriteTimer0(60);
 
-  // Configuracao do TIMER1
+  // TIMER1
   // T = TCY * Prescaler * (MAX - INICIAL)
   // 10ms = 200ns * 8 * (65536 - 3036)
   OpenTimer1(TIMER_INT_ON &   // Interrupcao Habilitada
              T1_16BIT_RW &    // 16 bits
              T1_SOURCE_INT &  // clock interno
              T1_PS_1_8);      // 1:8
+  PIR1bits.TMR1IF = 0;        // limpa flag
   WriteTimer1(3036);
 
-      // Config Registradores USART
-      TXSTAbits.SYNC = 0;  // Modo assincrono
-  BAUDCONbits.BRG16 = 0;   // 8-bit Baud Rate Generator
-  TXSTAbits.BRGH = 1;      // Baud rate = high speed
-  RCSTAbits.SPEN = 1;      // Serial port enabled
-  TXSTAbits.TXEN = 1;      // Transmit enabled
-  SPBRG = 0x40;            // 64
+  // USART
+  TXSTAbits.SYNC = 0;     // Modo assincrono
+  BAUDCONbits.BRG16 = 0;  // 8-bit Baud Rate Generator
+  TXSTAbits.BRGH = 1;     // Baud rate = high speed
+  RCSTAbits.SPEN = 1;     // Serial port enabled
+  TXSTAbits.TXEN = 1;     // Transmit enabled
+  // n = [Fosc / (16 * BAUDRATE)] - 1
+  // n = [20000000 / (16 * 19200)] - 1
+  SPBRG = 0x40;  // 64 = 19200 bits/s
   SPBRGH = 0x00;
+
+  // CONVERSOR A/D
+  ADCON0 = 0b00000001;  // enable canal 0
+  ADCON1 = 0b00001110;  // Referencia Tensao de Alimentacao e RA0 Analogico
+  ADCON2 = 0b10111101;  // direita | Tempo de aquisicao: 20 | Fosc/16
+  PIE1bits.ADIE = 1;    // Interrupcao habilitada
+  IPR1bits.ADIP = 1;    // alta prioridade
+  PIR1bits.ADIF = 0;    // limpa flag
 
   // PWM
   // Configuracoes do Timer 2: Prescaller de 16
@@ -112,22 +122,31 @@ void main(void) {
 
   while (1) {
     if (flag_tmr0_010ms == 1) {
-      // lida_com_o_menu();
-      atualiza_menu();
-      // ajusta_horas(&horas, &minutos, &segundos);
-      // ajusta_horas(&horas_maq, &minutos_maq, &segundos_maq);
-      // ajusta_horas(&horas_alvo, &minutos_alvo, &segundos_alvo);
+      // WriteCmdXLCD(0x80);  // primeira linha
+      // tecla_digitada = getKey();
+      // putrsXLCD(" '");
+      // putcXLCD(tecla_digitada);
+      // putrsXLCD("' 1:");
+      // putcXLCD(menu_1 + 0x30);
+      // putrsXLCD(" 2:");
+      // putcXLCD(menu_2 + 0x30);
 
-      // if (monitoramento_ativado == 1) {
-      //   // "DADO pwm: 100 ccp: 100 temp: 100"
-      //   envia_serial("DADO pwm:");
-      //   envia_serial("10");
-      //   envia_serial(" ccp:");
-      //   envia_serial("10");
-      //   envia_serial(" temp:'");
-      //   envia_numero_serial(temperatura_atual, 0);
-      //   envia_serial("'\n\r");
-      // }
+      lida_com_o_menu();
+      atualiza_menu();
+      ajusta_horas(&horas, &minutos, &segundos);
+      ajusta_horas(&horas_maq, &minutos_maq, &segundos_maq);
+      ajusta_horas(&horas_alvo, &minutos_alvo, &segundos_alvo);
+
+      if (monitoramento_ativado == 1) {
+        // "DADO pwm: 100 ccp: 100 temp: 100"
+        envia_serial("DADO pwm:");
+        envia_serial("10");
+        envia_serial(" ccp:");
+        envia_serial("10");
+        envia_serial(" temp:'");
+        envia_numero_serial(temperatura_atual, 0);
+        envia_serial("'\n\r");
+      }
       flag_tmr0_010ms = 0;
     }
   }
