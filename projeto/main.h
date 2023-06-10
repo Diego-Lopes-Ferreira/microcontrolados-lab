@@ -11,6 +11,7 @@ void lida_com_o_menu(void);
 void insere_tecla_horario(char n, char* horas, char* minutos, char* segundos);
 
 // perifericos.c
+void configura_timers(void);
 void configura_perifericos(void);
 void envia_serial(const rom char* mensagem);
 void envia_numero_serial(char numero, char tres_casas);

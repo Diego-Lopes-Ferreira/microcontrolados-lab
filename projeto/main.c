@@ -54,8 +54,14 @@ void main(void) {
   TRISD = 0x00;
   TRISE = 0x00;
   INTCON2bits.NOT_RBPU = 0;  // Habilita pull-ups PORTB
+  RCONbits.IPEN = 1;  // habilita prioridade
 
+  configura_timers();
   configura_perifericos();
+
+  INTCONbits.GIEL = 1;  // habilita interrupcoes de perifericos
+  INTCONbits.GIEH = 1;  // habilita interrupcoes geral
+
   inicializa_lcd();
   // ajusta_dc_1(pwm1);
   // ajusta_dc_2(pwm2);

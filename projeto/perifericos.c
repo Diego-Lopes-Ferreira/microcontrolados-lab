@@ -1,9 +1,7 @@
 #include "globals.h"
 #include "main.h"
 
-void configura_perifericos(void) {
-  RCONbits.IPEN = 1;  // habilita prioridade
-
+void configura_timers(void) {
   // TIMER0
   // T = TCY * Prescaler * (MAX - INICIAL)
   // 10ms = 200ns * 256 * (255 - 60)
@@ -14,7 +12,7 @@ void configura_perifericos(void) {
   INTCON2bits.TMR0IP = 1;     // interrupcao TMR0 e de alta prioridade
   WriteTimer0(60);
 
-  // TIMER1
+  // TIMER1 (mesmo intervalo do TIMER0 - mas para o A/D)
   // T = TCY * Prescaler * (MAX - INICIAL)
   // 10ms = 200ns * 8 * (65536 - 3036)
   OpenTimer1(TIMER_INT_ON &   // Interrupcao Habilitada
@@ -23,7 +21,9 @@ void configura_perifericos(void) {
              T1_PS_1_8);      // 1:8
   PIR1bits.TMR1IF = 0;        // limpa flag
   WriteTimer1(3036);
+}
 
+void configura_perifericos(void) {
   // USART
   TXSTAbits.SYNC = 0;     // Modo assincrono
   BAUDCONbits.BRG16 = 0;  // 8-bit Baud Rate Generator
@@ -49,9 +49,6 @@ void configura_perifericos(void) {
   // Modo PWM: active high
   CCP1CON = 0b00001100;
   CCP2CON = 0b00001100;
-
-  INTCONbits.GIEL = 1;  // habilita interrupcoes de perifericos
-  INTCONbits.GIEH = 1;  // habilita interrupcoes geral
 }
 
 void envia_serial(const rom char* mensagem) {
