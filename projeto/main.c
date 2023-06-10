@@ -67,9 +67,9 @@ void main(void) {
     if (flag_tmr0_010ms == 1) {
       lida_com_o_menu();
       atualiza_menu();
-      ajusta_horas(&horas, &minutos, &segundos);
-      ajusta_horas(&horas_maq, &minutos_maq, &segundos_maq);
-      ajusta_horas(&horas_alvo, &minutos_alvo, &segundos_alvo);
+      ajusta_horas(&horas, &minutos, &segundos, 24);
+      ajusta_horas(&horas_maq, &minutos_maq, &segundos_maq, 99);
+      ajusta_horas(&horas_alvo, &minutos_alvo, &segundos_alvo, 99);
 
       if (monitoramento_ativado == 1) {
         // "DADO pwm: 100 ccp: 100 temp: 100"

@@ -1,7 +1,7 @@
 #include "globals.h"
 #include "main.h"
 
-void ajusta_horas(char* horas, char* minutos, char* segundos) {
+void ajusta_horas(char* horas, char* minutos, char* segundos, char max_horas) {
   if (*segundos >= 60) {
     *segundos = 0;
     *minutos += 1;
@@ -16,7 +16,7 @@ void ajusta_horas(char* horas, char* minutos, char* segundos) {
     *minutos = 59;
     *horas -= 1;
   }
-  if (*horas >= 24) {
+  if (*horas >= max_horas) {
     *horas = 0;
   } else if (*horas < 0) {
     *horas = 23;
