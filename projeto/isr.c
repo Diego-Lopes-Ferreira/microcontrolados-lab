@@ -17,6 +17,11 @@ void ISR_Alta_Prioridade(void) {
   if (INTCONbits.TMR0IF) {
     flag_tmr0_010ms = 1;
     aux_tmr0_100++;
+    aux_tmr0_050++;
+    if (aux_tmr0_050 == 49) {
+      flag_tmr0_050ms = 1;
+      aux_tmr0_050 = 0;
+    }
     if (aux_tmr0_100 == 99) {
       aux_tmr0_100 = 0;
       if (menu_1 != 1 || menu_2 == 0) segundos++;

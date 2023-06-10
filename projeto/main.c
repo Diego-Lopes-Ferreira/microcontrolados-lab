@@ -46,6 +46,8 @@ char temperatura_atual = 0;  // em graus C
 
 // Flags
 char flag_tmr0_010ms = 0;
+char flag_tmr0_050ms = 0;
+char aux_tmr0_050 = 0;
 char aux_tmr0_100 = 0;
 char ad_finalizado = 0;
 
@@ -86,6 +88,16 @@ void main(void) {
       ajusta_dc_1(pwm1);
       ajusta_dc_2(pwm2);
       ad_finalizado = 0;
+    }
+
+    if (flag_tmr0_050ms == 1) {
+      if (alarme_ligado == 1) {
+        inverteLED();
+      } else {
+        PORTAbits.RA3 = 0;
+        PORTAbits.RA5 = 0;
+      }
+      flag_tmr0_050ms = 0;
     }
 
     if (flag_tmr0_010ms == 1) {
