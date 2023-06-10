@@ -33,7 +33,11 @@ char alarme_ligado = 0;
 
 // Dados
 unsigned int pwm1 = 50;
+unsigned int pwm1_anterior = 0;
+unsigned int pwm1_erro = 0;
 unsigned int pwm2 = 20;
+unsigned int pwm2_anterior = 0;
+unsigned int pwm2_erro = 0;
 char temperatura_alvo = 0;   // em graus C
 char temperatura_atual = 0;  // em graus C
 char tecla_digitada = ' ';
@@ -41,6 +45,7 @@ char tecla_digitada = ' ';
 // Flags
 char flag_tmr0_010ms = 0;
 char aux_tmr0_100 = 0;
+char ad_finalizado = 0;
 
 char i = 0;
 char j = 0;
@@ -54,7 +59,7 @@ void main(void) {
   TRISD = 0x00;
   TRISE = 0x00;
   INTCON2bits.NOT_RBPU = 0;  // Habilita pull-ups PORTB
-  RCONbits.IPEN = 1;  // habilita prioridade
+  RCONbits.IPEN = 1;         // habilita prioridade
 
   configura_timers();
   configura_perifericos();
@@ -69,6 +74,18 @@ void main(void) {
   while (1) {
     // tecla_digitada = getKey();
     // tela_testes();
+
+    if (ad_finalizado == 1) {
+      if (maquina_ativada) {
+        controla_temperatura();
+      } else {
+        pwm1 = 0;
+        pwm2 = 0;
+      }
+      ajusta_dc_1(pwm1);
+      ajusta_dc_2(pwm2);
+      ad_finalizado = 0;
+    }
 
     if (flag_tmr0_010ms == 1) {
       lida_com_o_menu();

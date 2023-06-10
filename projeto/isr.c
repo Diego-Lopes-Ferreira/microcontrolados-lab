@@ -32,9 +32,13 @@ void ISR_Alta_Prioridade(void) {
     WriteTimer0(60);
     INTCONbits.TMR0IF = 0;
   } else if (PIR1bits.TMR1IF) {
+    if (maquina_ativada == 1 && ad_finalizado == 0) {
+      ADCON0bits.GO_DONE = 1;  // inicia conversao A/D
+    }
+    WriteTimer1(64911);
     PIR1bits.TMR1IF = 0;
   } else if (PIR1bits.ADIF) {
-    // TODO
+    ad_finalizado = 1;
     PIR1bits.ADIF = 0;
   }
 }

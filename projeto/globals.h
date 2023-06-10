@@ -20,15 +20,20 @@ extern char tempo_pausado;
 extern char alarme_ligado;
 
 // Dados
+extern unsigned int pwm1;
+extern unsigned int pwm1_anterior;
+extern unsigned int pwm1_erro;
+extern unsigned int pwm2;
+extern unsigned int pwm2_anterior;
+extern unsigned int pwm2_erro;
 extern char temperatura_alvo;
 extern char temperatura_atual;
 extern char tecla_digitada;
-extern unsigned int pwm1;
-extern unsigned int pwm2;
 
 // Flags
 extern char flag_tmr0_010ms;
 extern char aux_tmr0_100;
+extern char ad_finalizado;
 
 extern char i;
 extern char j;

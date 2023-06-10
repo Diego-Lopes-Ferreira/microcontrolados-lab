@@ -17,6 +17,7 @@ void envia_serial(const rom char* mensagem);
 void envia_numero_serial(char numero, char tres_casas);
 void ajusta_dc_1(unsigned int dc_cpp1);
 void ajusta_dc_2(unsigned int dc_cpp2);
+void controla_temperatura(void);
 
 // teclado.c
 char getKey(void);  // prototipo da funcao

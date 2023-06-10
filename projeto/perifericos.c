@@ -14,13 +14,13 @@ void configura_timers(void) {
 
   // TIMER1 (mesmo intervalo do TIMER0 - mas para o A/D)
   // T = TCY * Prescaler * (MAX - INICIAL)
-  // 10ms = 200ns * 8 * (65536 - 3036)
+  // 1ms = 200ns * 8 * (65536 - 64911)
   OpenTimer1(TIMER_INT_ON &   // Interrupcao Habilitada
              T1_16BIT_RW &    // 16 bits
              T1_SOURCE_INT &  // clock interno
              T1_PS_1_8);      // 1:8
   PIR1bits.TMR1IF = 0;        // limpa flag
-  WriteTimer1(3036);
+  WriteTimer1(64911);
 }
 
 void configura_perifericos(void) {
@@ -96,4 +96,32 @@ void ajusta_dc_2(unsigned int dc_cpp2) {
   CCP2CONbits.DC2B0 = dc_cpp2 % 2;
   dc_cpp2 = dc_cpp2 >> 1;
   CCP2CONbits.DC2B1 = dc_cpp2 % 2;
+}
+
+void controla_temperatura(void) {
+  long valor_medido;
+  long tensao;
+  unsigned int pwm1_erro_anterior;
+
+  valor_medido = (ADRESH * 256) + ADRESL;
+  tensao = (5000 * (long)valor_medido) / 1023;
+  temperatura_atual = (long)tensao / 10;
+
+  pwm1_erro_anterior = pwm1_erro;
+  pwm1_erro = temperatura_alvo - temperatura_atual;
+  pwm1_anterior = pwm1;
+
+  // u = [u_1] + [P*(e_0)] + [I*(e_0 - i_0) + I_1] + [D*(e_0 - e_1)]
+  // P   => ganho proporcional
+  // I   => ganho integrativo
+  // D   => ganho derivativo
+  // I_1 => acumulador (integrador)
+
+  pwm1 = 50;
+  if (pwm1 > 100) {
+    pwm1 = 100;
+  }
+  if (pwm1 < 0) {
+    pwm1 = 0;
+  }
 }
