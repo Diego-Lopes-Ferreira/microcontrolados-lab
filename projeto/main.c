@@ -21,17 +21,20 @@ char horas_alvo = 0;
 char minutos_alvo = 0;
 char segundos_alvo = 0;
 
-// Estados
+// Estados do Menu
 char menu_1 = 0;
 char menu_2 = 0;
 char posicao_cursor = 0;
-char maquina_ativada = 0;
 char tecla_pressionada = 0;
-char monitoramento_ativado = 0;
+char tecla_digitada = ' ';
+
+// Estados da Maquina
+char maquina_ativada = 0;
 char tempo_pausado = 0;
+char monitoramento_ativado = 0;
 char alarme_ligado = 0;
 
-// Dados
+// Estados do Controle
 unsigned int pwm1 = 50;
 unsigned int pwm1_anterior = 0;
 unsigned int pwm1_erro = 0;
@@ -40,7 +43,6 @@ unsigned int pwm2_anterior = 0;
 unsigned int pwm2_erro = 0;
 char temperatura_alvo = 0;   // em graus C
 char temperatura_atual = 0;  // em graus C
-char tecla_digitada = ' ';
 
 // Flags
 char flag_tmr0_010ms = 0;
