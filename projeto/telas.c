@@ -26,7 +26,15 @@ void tela_menu_externo(void) {
   // "00C | 00mA | 00%"
   WriteCmdXLCD(0x80);  // primeira linha
   if (maquina_ativada == 0) {
-    imprime_horario(horas, minutos, segundos);
+    if (tempo_pausado == 1) {
+      if (pisca_tempo_restante == 1) {
+        imprime_horario(horas_maq, minutos_maq, segundos_maq);
+      } else {
+        putrsXLCD("                ");
+      }
+    } else {
+      imprime_horario(horas, minutos, segundos);
+    }
   } else {
     imprime_horario(horas_maq, minutos_maq, segundos_maq);
   }

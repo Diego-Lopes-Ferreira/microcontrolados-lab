@@ -27,6 +27,7 @@ char menu_2 = 0;
 char posicao_cursor = 0;
 char tecla_pressionada = 0;
 char tecla_digitada = ' ';
+char pisca_tempo_restante = 0;
 
 // Estados da Maquina
 char maquina_ativada = 0;
@@ -97,6 +98,9 @@ void main(void) {
         PORTAbits.RA3 = 0;
         PORTAbits.RA5 = 0;
       }
+
+      pisca_tempo_restante = !pisca_tempo_restante;
+
       flag_tmr0_050ms = 0;
     }
 
