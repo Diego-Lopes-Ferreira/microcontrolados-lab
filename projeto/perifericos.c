@@ -44,9 +44,8 @@ void configura_perifericos(void) {
   PIR1bits.ADIF = 0;    // limpa flag
 
   // PWM
-  // Configuracoes do Timer 2: Prescaller de 16
-  T2CON = 0b00000111;
-  PR2 = 61;
+  T2CON = 0b00000111;  // Timer 2: Prescaller de 16
+  PR2 = 99;            // (99+1) * 200ns * 16 = 320us = 3125Hz
   // Modo PWM: active high
   CCP1CON = 0b00001100;
   CCP2CON = 0b00001100;
@@ -85,7 +84,8 @@ void ajusta_dc_1(unsigned int dc_cpp1) {
   //  >> 0 = 01 23456789 => % 2 = 9 => DC1B1
   //  >> 1 = 00 12345678 => % 2 = 8 => DC1B0
   //  >> 2 = 00 01234567 => (char) = 01234567 => CCPRL
-  dc_cpp1 = dc_cpp1 * 4 * (PR2 + 1) / 100;
+  // dc_cpp1 = dc_cpp1 * 4 * (PR2 + 1) / 100;
+  dc_cpp1 = dc_cpp1 * 4;  // otimizado pois PR2 = 99
   CCPR1L = (char)(dc_cpp1 >> 2);
   CCP1CONbits.DC1B0 = dc_cpp1 % 2;
   dc_cpp1 = dc_cpp1 >> 1;
@@ -93,7 +93,8 @@ void ajusta_dc_1(unsigned int dc_cpp1) {
 }
 
 void ajusta_dc_2(unsigned int dc_cpp2) {
-  dc_cpp2 = dc_cpp2 * 4 * (PR2 + 1) / 100;
+  // dc_cpp2 = dc_cpp2 * 4 * (PR2 + 1) / 100;
+  dc_cpp2 = dc_cpp2 * 4 * (PR2 + 1) / 100;  // otimizado pois PR2 = 99
   CCPR2L = (char)(dc_cpp2 >> 2);
   CCP2CONbits.DC2B0 = dc_cpp2 % 2;
   dc_cpp2 = dc_cpp2 >> 1;
