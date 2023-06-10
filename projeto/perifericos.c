@@ -12,7 +12,7 @@ void configura_timers(void) {
   INTCON2bits.TMR0IP = 1;     // interrupcao TMR0 e de alta prioridade
   WriteTimer0(60);
 
-  // TIMER1 (mesmo intervalo do TIMER0 - mas para o A/D)
+  // TIMER1 (A/D)
   // T = TCY * Prescaler * (MAX - INICIAL)
   // 1ms = 200ns * 8 * (65536 - 64911)
   OpenTimer1(TIMER_INT_ON &   // Interrupcao Habilitada
@@ -21,6 +21,10 @@ void configura_timers(void) {
              T1_PS_1_8);      // 1:8
   PIR1bits.TMR1IF = 0;        // limpa flag
   WriteTimer1(64911);
+
+  // TIMER1 (PWM)
+  // Timer 2: Prescaller de 16
+  T2CON = 0b00000111;
 }
 
 void configura_perifericos(void) {
@@ -37,15 +41,15 @@ void configura_perifericos(void) {
 
   // CONVERSOR A/D
   ADCON0 = 0b00000001;  // enable canal 0
-  ADCON1 = 0b00001110;  // Referencia Tensao de Alimentacao e RA0 Analogico
+  ADCON1 = 0b00001110;  // RA0 com Vref=5V
   ADCON2 = 0b10111101;  // direita | Tempo de aquisicao: 20 | Fosc/16
   PIE1bits.ADIE = 1;    // Interrupcao habilitada
   IPR1bits.ADIP = 1;    // alta prioridade
   PIR1bits.ADIF = 0;    // limpa flag
 
   // PWM
-  T2CON = 0b00000111;  // Timer 2: Prescaller de 16
-  PR2 = 99;            // (99+1) * 200ns * 16 = 320us = 3125Hz
+  // Timer 2: Prescaller de 16
+  PR2 = 99;  // (99+1) * 200ns * 16 = 320us = 3125Hz
   // Modo PWM: active high
   CCP1CON = 0b00001100;
   CCP2CON = 0b00001100;

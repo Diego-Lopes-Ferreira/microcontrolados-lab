@@ -55,17 +55,16 @@ char k = 0;
 
 void main(void) {
   // 1 - saida | 0 - entrada
-  TRISA = 0b00000001;
-  TRISB = 0b11110000;
-  TRISC = 0b00000001;
-  TRISD = 0x00;
-  TRISE = 0x00;
+  TRISA = 0b00000001;        // Sensor de temperatura em RA0
+  TRISB = 0b11110000;        // Teclado matricial
+  TRISC = 0b00000110;        // Saidas do PWM
+  TRISD = 0b00000000;        // Display LCD
+  TRISE = 0b00000000;        // Display LCD
   INTCON2bits.NOT_RBPU = 0;  // Habilita pull-ups PORTB
-  RCONbits.IPEN = 1;         // habilita prioridade
 
+  RCONbits.IPEN = 1;  // habilita prioridade
   configura_timers();
   configura_perifericos();
-
   INTCONbits.GIEL = 1;  // habilita interrupcoes de perifericos
   INTCONbits.GIEH = 1;  // habilita interrupcoes geral
 
@@ -78,7 +77,7 @@ void main(void) {
     // tela_testes();
 
     if (ad_finalizado == 1) {
-      if (maquina_ativada) {
+      if (maquina_ativada == 1) {
         controla_temperatura();
       } else {
         pwm1 = 0;
