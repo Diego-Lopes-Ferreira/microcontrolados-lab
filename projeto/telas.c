@@ -17,36 +17,32 @@ void atualiza_menu(void) {
   } else {
     tela_menu_interno();
   }
-
-
 }
 
 void tela_menu_externo(void) {
   // "00:00:00        "
   // "00C | 00mA | 00%"
   WriteCmdXLCD(0x80);  // primeira linha
-  if (maquina_ativada == 0) {
-    if (tempo_pausado == 1) {
-      if (pisca_tempo_restante == 1) {
-        imprime_horario(horas_maq, minutos_maq, segundos_maq);
-      } else {
-        putrsXLCD("                ");
-      }
+
+  if (maquina_ativada == 0 && tempo_pausado == 0) {  // maquina desligada
+    imprime_horario(horas, minutos, segundos);
+  } else if (maquina_ativada == 0 && tempo_pausado == 1) {  // maquina pausada
+    if (pisca_tempo_restante == 1) {
+      imprime_horario(horas_maq, minutos_maq, segundos_maq);
     } else {
-      imprime_horario(horas, minutos, segundos);
+      putrsXLCD("                ");
     }
-  } else {
+  } else {  // maquina ligada
     imprime_horario(horas_maq, minutos_maq, segundos_maq);
   }
 
   WriteCmdXLCD(0xC0);  // segunda linha
-  if (maquina_ativada == 0) {
-    if (tempo_pausado == 1) {
-      putrsXLCD("Maquina OFF*    ");
-    } else {
-      putrsXLCD("Maquina OFF     ");
-    }
-  } else {
+
+  if (maquina_ativada == 0 && tempo_pausado == 0) {  // Maquina desligada
+    putrsXLCD("Maquina OFF     ");
+  } else if (maquina_ativada == 0 && tempo_pausado == 1) {  // Maquina pausada
+    putrsXLCD("Maquina OFF*    ");
+  } else {                                      // maquina ligada
     putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01 "0               "
     putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02 "00              "
     putrsXLCD("C | ");                          // 4 06 "00C |           "
@@ -106,23 +102,29 @@ void tela_menu_interno(void) {
 
   WriteCmdXLCD(0xC0);  // segunda linha
   if (menu_1 == 1) {
+    // "12:34:56        "
     imprime_horario(horas, minutos, segundos);
   } else if (menu_1 == 2) {
+    // "00:00:00        "
     imprime_horario(horas_alvo, minutos_alvo, segundos_alvo);
   } else if (menu_1 == 3) {
+    // "00              "
     putcXLCD(0x30 + (temperatura_alvo / 10));
     putcXLCD(0x30 + (temperatura_alvo % 10));
-    putrsXLCD("      ");
+    putrsXLCD("              ");
   } else if (menu_1 == 4) {
+    // "Desativar       " ou "Ativar          "
     if (monitoramento_ativado == 1) {
-      putrsXLCD("Desativar   ");
+      putrsXLCD("Desativar       ");
     } else {
-      putrsXLCD("Ativar      ");
+      putrsXLCD("Ativar          ");
     }
   }
 }
 
 void tela_testes(void) {
+  // " 'F' 1:0 2:0    "
+  // "00C | 00mA | 00%"
   WriteCmdXLCD(0x80);  // primeira linha
   putrsXLCD(" '");
   putcXLCD(tecla_digitada);
@@ -130,7 +132,7 @@ void tela_testes(void) {
   putcXLCD(menu_1 + 0x30);
   putrsXLCD(" 2:");
   putcXLCD(menu_2 + 0x30);
-  WriteCmdXLCD(0xC0);  // segunda linha
+  WriteCmdXLCD(0xC0);                         // segunda linha
   putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01
   putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02
   putrsXLCD("C | ");                          // 4 06
@@ -144,6 +146,7 @@ void tela_testes(void) {
 }
 
 void imprime_horario(char h, char m, char s) {
+  // "00:00:00        "
   putcXLCD(0x30 + (h / 10));
   putcXLCD(0x30 + (h % 10));
   putcXLCD(':');
