@@ -25,6 +25,7 @@ char getKey(void);  // prototipo da funcao
 // telas.c
 void inicializa_lcd(void);
 void atualiza_menu(void);
+void tela_alarme(void);
 void tela_menu_externo(void);
 void tela_menu_interno(void);
 void tela_testes(void);

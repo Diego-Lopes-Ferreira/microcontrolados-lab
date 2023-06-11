@@ -12,11 +12,28 @@ void inicializa_lcd(void) {
 }
 
 void atualiza_menu(void) {
+  if (alarme_ligado == 1) {
+    tela_alarme();
+    return;
+  }
   if (menu_1 == 0) {
     tela_menu_externo();
   } else {
     tela_menu_interno();
   }
+}
+
+void tela_alarme(void) {
+  // "00:00:00        "
+  // "00C | 00mA | 00%"
+  WriteCmdXLCD(0x80);  // primeira linha
+  if (pisca_tempo_restante == 1) {
+    imprime_horario(horas_maq, minutos_maq, segundos_maq);
+  } else {
+    putrsXLCD("                ");
+  }
+  WriteCmdXLCD(0xC0);  // segunda linha
+  putrsXLCD("Fim Ciclo       ");
 }
 
 void tela_menu_externo(void) {
