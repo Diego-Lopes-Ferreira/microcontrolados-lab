@@ -104,7 +104,6 @@ void ajusta_dc_2(unsigned int dc_cpp2) {
 
 void controla_temperatura(void) {
   long valor_medido;
-  long tensao;
   unsigned int pwm1_erro_anterior;
 
   valor_medido = (ADRESH * 256) + ADRESL;       // 10bits de aquisicao

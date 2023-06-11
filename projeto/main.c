@@ -42,7 +42,8 @@ unsigned int pwm1_erro = 0;
 unsigned int pwm2 = 20;
 unsigned int pwm2_anterior = 0;
 unsigned int pwm2_erro = 0;
-char temperatura_alvo = 0;   // em graus C
+long tensao = 0;
+char temperatura_alvo = 10;  // em graus C
 char temperatura_atual = 0;  // em graus C
 
 // Flags

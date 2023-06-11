@@ -25,7 +25,7 @@ void atualiza_menu(void) {
 
 void tela_alarme(void) {
   // "00:00:00        "
-  // "00C | 00mA | 00%"
+  // "Fim Ciclo       "
   WriteCmdXLCD(0x80);  // primeira linha
   if (pisca_tempo_restante == 1) {
     imprime_horario(horas_maq, minutos_maq, segundos_maq);
@@ -37,8 +37,9 @@ void tela_alarme(void) {
 }
 
 void tela_menu_externo(void) {
-  // "00:00:00        "
-  // "00C | 00mA | 00%"
+  //  Ligada               Pausada              Desligada
+  // "00:00:00        " | "00:00:00        " | "12:34:56        "
+  // "00C | 00mA | 00%" | "Maquina OFF*    " | "Maquina OFF     "
   WriteCmdXLCD(0x80);  // primeira linha
 
   if (maquina_ativada == 0 && tempo_pausado == 0) {  // maquina desligada
@@ -59,16 +60,21 @@ void tela_menu_externo(void) {
     putrsXLCD("Maquina OFF     ");
   } else if (maquina_ativada == 0 && tempo_pausado == 1) {  // Maquina pausada
     putrsXLCD("Maquina OFF*    ");
-  } else {                                      // maquina ligada
-    putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01 "0               "
-    putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02 "00              "
-    putrsXLCD("C | ");                          // 4 06 "00C |           "
-    putcXLCD(0x30 + (temperatura_atual / 10));  // 1 07 "00C | 00        "
-    putcXLCD(0x30 + (temperatura_atual % 10));  // 1 08 "00C | 00        "
-    putrsXLCD("mA | ");                         // 5 13 "00C | 00mA |    "
-    putcXLCD(0x30 + (pwm1 / 10));               // 1 14 "00C | 00mA | 0  "
-    putcXLCD(0x30 + (pwm1 % 10));               // 1 15 "00C | 00mA | 00 "
-    putrsXLCD("%");                             // 1 16 "00C | 00mA | 00%"
+  } else {  // maquina ligada
+
+    // "0000mV 00C  100%"
+    putcXLCD(0x30 + (tensao / 1000));               // 1 00 "0               "
+    putcXLCD(0x30 + (tensao % 1000) / 100);         // 1 00 "00              "
+    putcXLCD(0x30 + ((tensao % 1000) % 100) / 10);  // 1 00 "000             "
+    putcXLCD(0x30 + ((tensao % 1000) % 100) % 10);  // 1 00 "0000            "
+    putrsXLCD("mV=");                               // 5 00 "0000mV=         "
+    putcXLCD(0x30 + (temperatura_atual / 10));      // 1 01 "0000mV=0        "
+    putcXLCD(0x30 + (temperatura_atual % 10));      // 1 02 "0000mV=00       "
+    putrsXLCD("C  ");                               // 2 04 "0000mV=00C      "
+    putcXLCD(0x30 + (pwm1 / 100));                  // 1 00 "0000mV=00C  1   "
+    putcXLCD(0x30 + (pwm1 % 100) / 10);             // 1 00 "0000mV=00C  10  "
+    putcXLCD(0x30 + (pwm1 % 100) % 10);             // 1 00 "0000mV=00C  100 "
+    putrsXLCD("%");                                 // 1 00 "0000mV=00C  100%"
   }
 }
 

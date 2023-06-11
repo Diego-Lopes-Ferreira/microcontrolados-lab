@@ -30,6 +30,7 @@ extern unsigned int pwm1_erro;
 extern unsigned int pwm2;
 extern unsigned int pwm2_anterior;
 extern unsigned int pwm2_erro;
+extern long tensao;
 extern char temperatura_alvo;   // em graus C
 extern char temperatura_atual;  // em graus C
 
