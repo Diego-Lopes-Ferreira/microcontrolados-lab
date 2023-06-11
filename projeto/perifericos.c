@@ -107,9 +107,9 @@ void controla_temperatura(void) {
   long tensao;
   unsigned int pwm1_erro_anterior;
 
-  valor_medido = (ADRESH * 256) + ADRESL;
-  tensao = (5000 * (long)valor_medido) / 1023;
-  temperatura_atual = (long)tensao / 10;
+  valor_medido = (ADRESH * 256) + ADRESL;       // 10bits de aquisicao
+  tensao = (5000 * (long)valor_medido) / 1023;  // 10bits de aquisicao
+  temperatura_atual = (long)tensao / 10;        // LM35 = 10mV/deg
 
   pwm1_erro_anterior = pwm1_erro;
   pwm1_erro = temperatura_alvo - temperatura_atual;
