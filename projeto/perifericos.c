@@ -64,20 +64,27 @@ void envia_serial(const rom char* mensagem) {
   }
 }
 
-void envia_numero_serial(char numero, char tres_casas) {
-  if (tres_casas) {
+void envia_numero_serial(int numero, char casas_decimais) {
+  if (casas_decimais >= 4) {
     while (TXSTAbits.TRMT == 0) {
     }
-    TXREG = ((numero / 10) / 10) + 0x30;
+    TXREG = 0x30 + numero / 1000;  // X000
   }
-
-  while (TXSTAbits.TRMT == 0) {
+  if (casas_decimais >= 3) {
+    while (TXSTAbits.TRMT == 0) {
+    }
+    TXREG = 0x30 + (numero % 1000) / 100;  // 0X00
   }
-  TXREG = ((numero / 10) - 10 * ((numero / 10) / 10)) + 0x30;
-
-  while (TXSTAbits.TRMT == 0) {
+  if (casas_decimais >= 2) {
+    while (TXSTAbits.TRMT == 0) {
+    }
+    TXREG = 0x30 + ((numero % 1000) % 100) / 10;  // 00X0
   }
-  TXREG = (numero % 10) + 0x30;
+  if (casas_decimais >= 1) {
+    while (TXSTAbits.TRMT == 0) {
+    }
+    TXREG = 0x30 + ((numero % 1000) % 100) % 10;  // 000X
+  }
 }
 
 void ajusta_dc_1(unsigned int dc_cpp1) {

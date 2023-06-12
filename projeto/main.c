@@ -116,15 +116,23 @@ void main(void) {
     }
 
     if (flag_tmr0_1s == 1) {
-      if (monitoramento_ativado == 1 && maquina_ativada == 1) {
-        // "DADO pwm: 100 ccp: 100 temp: 100"
-        envia_serial("DADO pwm:");
-        envia_serial("10");
-        envia_serial(" ccp:");
-        envia_serial("10");
-        envia_serial(" temp:'");
-        envia_numero_serial(temperatura_atual, 0);
-        envia_serial("'\n\r");
+      if (monitoramento_ativado == 1) {
+        // “00:00:00 [005] PWM1=000%  PWM2=000%  V=0000mV  T=000C”
+        envia_numero_serial(horas, 2);
+        envia_serial(":");
+        envia_numero_serial(minutos, 2);
+        envia_serial(":");
+        envia_numero_serial(segundos, 2);
+
+        envia_serial(" [005] PWM1=");
+        envia_numero_serial((int)pwm1, 3);
+        envia_serial("% PWM2=");
+        envia_numero_serial((int)pwm2, 3);
+        envia_serial("% V=");
+        envia_numero_serial((int)tensao, 4);
+        envia_serial("mV T=");
+        envia_numero_serial((int)temperatura_atual, 3);
+        envia_serial("C\n\r");
       }
       flag_tmr0_1s = 0;
     }
