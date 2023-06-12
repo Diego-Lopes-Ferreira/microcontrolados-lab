@@ -40,9 +40,9 @@ void configura_perifericos(void) {
   SPBRGH = 0x00;
 
   // CONVERSOR A/D
-  ADCON0 = 0b00000001;  // enable canal 0
-  ADCON1 = 0b00001110;  // RA0 com Vref=5V
-  ADCON2 = 0b10111101;  // direita | Tempo de aquisicao: 20 | Fosc/16
+  ADCON0 = 0b00000001;  // Canal0=RA0 (xx0000) flag inicio (0) A/D Ativado (1)
+  ADCON1 = 0b00001110;  // Vref-=Vss e Vref+=Vdd (xx00) | RA0 analogico (1110)
+  ADCON2 = 0b10111101;  // Direita (1x) | Taq: 20 (111) | Fosc/16 (101)
   PIE1bits.ADIE = 1;    // Interrupcao habilitada
   IPR1bits.ADIP = 1;    // alta prioridade
   PIR1bits.ADIF = 0;    // limpa flag
