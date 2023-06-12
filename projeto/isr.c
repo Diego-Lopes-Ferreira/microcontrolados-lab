@@ -44,6 +44,7 @@ void ISR_Alta_Prioridade(void) {
         if (segundos_maq < 0 && minutos_maq == 0 && horas_maq == 0) {
           segundos_maq = 0;
           alarme_ligado = 1;
+          tempo_pausado = 0;
           maquina_ativada = 0;
         }
       }
