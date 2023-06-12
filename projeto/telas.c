@@ -12,18 +12,26 @@ void inicializa_lcd(void) {
 }
 
 void atualiza_menu(void) {
+  // Alarme ligado sobrescreve as outras telas
   if (alarme_ligado == 1) {
     tela_alarme();
     return;
   }
+
+  // Senao, mostre os menus de acordo:
   if (menu_1 == 0) {
     tela_menu_externo();
   } else {
     tela_menu_interno();
+    // usuario editando algo: pisca cursor
+    if (menu_2 == 1) {
+      lcd_pisca_indicador_cursor();
+    }
   }
 }
 
 void tela_alarme(void) {
+  WriteCmdXLCD(0x0C);  // desliga cursor
   // "00:00:00        "
   // "Fim Ciclo       "
   WriteCmdXLCD(0x80);  // primeira linha
@@ -37,6 +45,7 @@ void tela_alarme(void) {
 }
 
 void tela_menu_externo(void) {
+  WriteCmdXLCD(0x0C);  // desliga cursor
   //  Ligada               Pausada              Desligada
   // "00:00:00        " | "00:00:00        " | "12:34:56        "
   // "00C | 00mA | 00%" | "Maquina OFF*    " | "Maquina OFF     "
@@ -80,6 +89,7 @@ void tela_menu_externo(void) {
 }
 
 void tela_menu_interno(void) {
+  WriteCmdXLCD(0x0C);  // desliga cursor
   WriteCmdXLCD(0x80);  // primeira linha
   if (menu_1 == 1) {
     // "[1/4] Horario   "
@@ -147,26 +157,29 @@ void tela_menu_interno(void) {
 }
 
 void tela_testes(void) {
+  WriteCmdXLCD(0x0C);  // desliga cursor
   // " 'F' 1:0 2:0    "
   // "00C | 00mA | 00%"
   WriteCmdXLCD(0x80);  // primeira linha
-  putrsXLCD(" '");
+  putrsXLCD("'");
   putcXLCD(tecla_digitada);
-  putrsXLCD("' 1:");
+  putrsXLCD("'1:");
   putcXLCD(menu_1 + 0x30);
-  putrsXLCD(" 2:");
+  putrsXLCD("2:");
   putcXLCD(menu_2 + 0x30);
+  putrsXLCD("P:");
+  putcXLCD(posicao_cursor + 0x30);
   WriteCmdXLCD(0xC0);                         // segunda linha
-  putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01
-  putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02
-  putrsXLCD("C | ");                          // 4 06
-  putcXLCD(0x30 + (temperatura_atual / 10));  // 1 07
-  putcXLCD(0x30 + (temperatura_atual % 10));  // 1 08
-  putrsXLCD("mA | ");                         // 5 13
-  putcXLCD(0x30 + (pwm1 / 10));               // 1 14
-  putcXLCD(0x30 + (pwm1 % 10));               // 1 15
-  putrsXLCD("%");                             // 1 16
-  // imprime_horario(horas, minutos, segundos);
+  // putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01
+  // putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02
+  // putrsXLCD("C | ");                          // 4 06
+  // putcXLCD(0x30 + (temperatura_atual / 10));  // 1 07
+  // putcXLCD(0x30 + (temperatura_atual % 10));  // 1 08
+  // putrsXLCD("mA | ");                         // 5 13
+  // putcXLCD(0x30 + (pwm1 / 10));               // 1 14
+  // putcXLCD(0x30 + (pwm1 % 10));               // 1 15
+  // putrsXLCD("%");                             // 1 16
+  imprime_horario(horas, minutos, segundos);
 }
 
 void imprime_horario(char h, char m, char s) {
@@ -180,4 +193,27 @@ void imprime_horario(char h, char m, char s) {
   putcXLCD(0x30 + (s / 10));
   putcXLCD(0x30 + (s % 10));
   putrsXLCD("        ");
+}
+
+void lcd_pisca_indicador_cursor(void) {
+  // Pisca o caracter na posicao do cursor a cada 0,5s
+  // (coloca um espaco no lugar dele)
+  char i = 0;
+  char outra_coisa = 0;
+  if (pisca_tempo_restante == 0) {
+    return;
+  }
+
+  if (posicao_cursor == 1) outra_coisa = 0;  // "0
+  if (posicao_cursor == 2) outra_coisa = 1;  // "00
+  if (posicao_cursor == 3) outra_coisa = 3;  // "00:0
+  if (posicao_cursor == 4) outra_coisa = 4;  // "00:00
+  if (posicao_cursor == 5) outra_coisa = 6;  // "00:00:0
+  if (posicao_cursor == 6) outra_coisa = 7;  // "00:00:00
+
+  WriteCmdXLCD(0xC0);  // segunda linha
+  for (i = 0; i < outra_coisa; i++) {
+    WriteCmdXLCD(0x14);  // desloca cursor direita
+  }
+  putrsXLCD(" ");
 }

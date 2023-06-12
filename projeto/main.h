@@ -30,3 +30,4 @@ void tela_menu_externo(void);
 void tela_menu_interno(void);
 void tela_testes(void);
 void imprime_horario(char h, char m, char s);
+void lcd_pisca_indicador_cursor(void);

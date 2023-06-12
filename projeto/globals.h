@@ -16,6 +16,7 @@ extern char posicao_cursor;
 extern char tecla_pressionada;
 extern char tecla_digitada;
 extern char pisca_tempo_restante;
+extern char acao_usuario;
 
 // Estados da Maquina
 extern char maquina_ativada;
@@ -36,11 +37,8 @@ extern char temperatura_atual;  // em graus C
 
 // Flags
 extern char flag_tmr0_010ms;
-extern char flag_tmr0_050ms;
+extern char flag_tmr0_500ms;
+extern char flag_tmr0_1s;
 extern char aux_tmr0_050;
 extern char aux_tmr0_100;
 extern char ad_finalizado;
-
-extern char i;
-extern char j;
-extern char k;

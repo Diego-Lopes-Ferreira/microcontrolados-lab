@@ -105,6 +105,8 @@ void ajusta_dc_2(unsigned int dc_cpp2) {
 void controla_temperatura(void) {
   long valor_medido;
   unsigned int pwm1_erro_anterior;
+  unsigned int A = 1;
+  unsigned int B = 2;
 
   // 10bits xxxxxx01 00000000
   valor_medido = (256 * (unsigned char)ADRESH) + (unsigned char)ADRESL;
@@ -115,17 +117,15 @@ void controla_temperatura(void) {
   pwm1_erro = temperatura_alvo - temperatura_atual;
   pwm1_anterior = pwm1;
 
-  // u = [u_1] + [P*(e_0)] + [I*(e_0 - i_0) + I_1] + [D*(e_0 - e_1)]
-  // P   => ganho proporcional
-  // I   => ganho integrativo
-  // D   => ganho derivativo
-  // I_1 => acumulador (integrador)
+  // u = [u_1] + [A*(e_0 - e_1)] + [B*(e_0)]
+  // A   => ganho integrativo
+  // B   => ganho proporcional
 
-  pwm1 = 50;
+  pwm1 += A * (pwm1_erro - pwm1_erro_anterior) + B * (pwm1_erro);
   if (pwm1 > 100) {
     pwm1 = 100;
   }
-  if (pwm1 < 0) {
+  if (pwm1 > 65000) {
     pwm1 = 0;
   }
 }

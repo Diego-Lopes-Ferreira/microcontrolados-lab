@@ -93,21 +93,20 @@ void lida_com_o_menu(void) {
   }  // if (menu_1 > 0 && menu_2 == 0)
 
   if (menu_1 > 0 && menu_2 == 1) {
-    if (tecla_digitada == 'C') {
-      // move cursor esquerda
-      posicao_cursor += 1;
-      if (posicao_cursor == 7) posicao_cursor = 6;
-    } else if (tecla_digitada == 'D') {
-      // move cursor direita
+    acao_usuario = 1;             // flag pra atualizar o display
+    if (tecla_digitada == 'C') {  // move cursor esquerda
       posicao_cursor -= 1;
-      if (posicao_cursor == 0) posicao_cursor = 1;
-    } else if (tecla_digitada == 'E') {
-      // enter
+      if (posicao_cursor == 0) posicao_cursor = 6;
+    } else if (tecla_digitada == 'D') {  // move cursor direita
+      posicao_cursor += 1;
+      if (posicao_cursor == 7) posicao_cursor = 1;
+    } else if (tecla_digitada == 'E') {  // enter
       menu_2 = 0;
       posicao_cursor = 1;
     } else if (tecla_digitada <= '9') {
-      // se o cursor estiver na casa das dezenas => so pode de 0 a 5
-      if (posicao_cursor % 2 == 0 && posicao_cursor < 5 && tecla_digitada > '5')
+      // se o cursor estiver em P: "xx:Px:Px" => so pode de 0 a 5
+      // Essa posicao e par e maior que 1
+      if (posicao_cursor / 2 == 0 && posicao_cursor > 1 && tecla_digitada > '5')
         return;
       if (menu_1 == 1) {
         insere_tecla_horario(tecla_digitada, &horas, &minutos, &segundos);
@@ -125,17 +124,19 @@ void lida_com_o_menu(void) {
 
 void insere_tecla_horario(char n, char* horas, char* minutos, char* segundos) {
   n -= 0x30;
-  if (posicao_cursor == 1) {
+  if (posicao_cursor == 6) {
     *segundos = n + (10 * (*segundos / 10));
-  } else if (posicao_cursor == 2) {
-    *segundos = (n * 10) + (*segundos % 10);
-  } else if (posicao_cursor == 3) {
-    *minutos = n + (10 * (*minutos / 10));
-  } else if (posicao_cursor == 4) {
-    *minutos = (n * 10) + (*minutos % 10);
   } else if (posicao_cursor == 5) {
+    *segundos = (n * 10) + (*segundos % 10);
+  } else if (posicao_cursor == 4) {
+    *minutos = n + (10 * (*minutos / 10));
+  } else if (posicao_cursor == 3) {
+    *minutos = (n * 10) + (*minutos % 10);
+  } else if (posicao_cursor == 2) {
     *horas = n + (10 * (*horas / 10));
-  } else if (posicao_cursor == 6) {
+  } else if (posicao_cursor == 1) {
     *horas = (n * 10) + (*horas % 10);
   }
+  posicao_cursor += 1;
+  if (posicao_cursor == 7) posicao_cursor = 1;
 }
