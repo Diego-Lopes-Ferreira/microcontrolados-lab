@@ -15,12 +15,17 @@ void configura_timers(void) {
   // TIMER1 (A/D)
   // T = TCY * Prescaler * (MAX - INICIAL)
   // 100ms = 200ns * 8 * (65536 - 36)
-  OpenTimer1(TIMER_INT_ON &   // Interrupcao Habilitada
-             T1_16BIT_RW &    // 16 bits
-             T1_SOURCE_INT &  // clock interno
-             T1_PS_1_8);      // 1:8
-  PIR1bits.TMR1IF = 0;        // limpa flag
-  WriteTimer1(36);
+
+  // NOTE(DIEGO): Por alguma razao a funcao pronta trava o PWM2, entao
+  //              o TMR1 sera configurado na mao mesmo...
+
+  // 16bits (1) | Clock not from tmr1 osc (0) | Prescale 1:8 (11)
+  // Enable tmr1 osc (0) | Sync (x) | Clock Source internal (0) | On/Off (1)
+  T1CON = 0b10110001;
+  PIE1bits.TMR1IE = 1;  // liga interrupcao
+  PIR1bits.TMR1IF = 0;  // limpa flag
+  TMR1H = 0;
+  TMR1L = 36;
 
   // TIMER2 (PWM)
   // Postscale 1:1(x0000) | Timer2 On (1) | Prescale 1:16 (1x)

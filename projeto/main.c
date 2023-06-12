@@ -78,10 +78,9 @@ void main(void) {
         controla_temperatura();  // pwm1 = controle
         ad_finalizado = 0;
       }
-      pwm1 = 50;
       ajusta_dc_1(pwm1);
       pwm2 = 30;  // Aquecedor ligado
-      ajusta_dc_2(50);
+      ajusta_dc_2(pwm2);
     } else {
       pwm1 = 0;
       ajusta_dc_1(pwm1);
