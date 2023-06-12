@@ -33,19 +33,19 @@ char acao_usuario = 0;
 // Estados da Maquina
 char maquina_ativada = 0;
 char tempo_pausado = 0;
-char monitoramento_ativado = 0;
+char monitoramento_ativado = 1;
 char alarme_ligado = 0;
 
 // Estados do Controle
-unsigned int pwm1 = 0;  // RC2=Cooler
-unsigned int pwm1_anterior = 0;
-unsigned int pwm1_erro = 0;
-unsigned int pwm2 = 0;  // RC1=Aquecedo
-unsigned int pwm2_anterior = 0;
-unsigned int pwm2_erro = 0;
+int pwm1 = 0;  // RC2=Cooler
+int pwm1_anterior = 0;
+int pwm1_erro = 0;
+int pwm2 = 0;  // RC1=Aquecedo
+int pwm2_anterior = 0;
+int pwm2_erro = 0;
 long tensao = 0;
-char temperatura_alvo = 10;  // em graus C
-char temperatura_atual = 0;  // em graus C
+int temperatura_alvo = 80;  // em graus C
+int temperatura_atual = 0;  // em graus C
 
 // Flags
 char flag_tmr0_010ms = 0;
@@ -76,19 +76,23 @@ void main(void) {
   // ajusta_dc_1(pwm1);
   // ajusta_dc_2(pwm2);
 
+  envia_serial("=====\n\r");
   while (1) {
     if (maquina_ativada == 1) {
       if (ad_finalizado == 1) {
         controla_temperatura();  // pwm1 = controle
         ad_finalizado = 0;
       }
+      pwm1 = 50;
+      ajusta_dc_1(pwm1);
       pwm2 = 30;  // Aquecedor ligado
+      ajusta_dc_2(pwm2);
     } else {
       pwm1 = 0;
+      ajusta_dc_1(pwm1);
       pwm2 = 0;
+      ajusta_dc_2(pwm2);
     }
-    ajusta_dc_1(pwm1);
-    ajusta_dc_2(pwm2);
 
     if (flag_tmr0_010ms == 1) {
       flag_tmr0_1s = 0;
@@ -125,9 +129,9 @@ void main(void) {
         envia_numero_serial(segundos, 2);
 
         envia_serial(" [005] PWM1=");
-        envia_numero_serial((int)pwm1, 3);
+        envia_numero_serial(pwm1, 3);
         envia_serial("% PWM2=");
-        envia_numero_serial((int)pwm2, 3);
+        envia_numero_serial(pwm2, 3);
         envia_serial("% V=");
         envia_numero_serial((int)tensao, 4);
         envia_serial("mV T=");

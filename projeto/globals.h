@@ -25,15 +25,15 @@ extern char monitoramento_ativado;
 extern char alarme_ligado;
 
 // Estados do Controle
-extern unsigned int pwm1;
-extern unsigned int pwm1_anterior;
-extern unsigned int pwm1_erro;
-extern unsigned int pwm2;
-extern unsigned int pwm2_anterior;
-extern unsigned int pwm2_erro;
+extern int pwm1;
+extern int pwm1_anterior;
+extern int pwm1_erro;
+extern int pwm2;
+extern int pwm2_anterior;
+extern int pwm2_erro;
 extern long tensao;
-extern char temperatura_alvo;   // em graus C
-extern char temperatura_atual;  // em graus C
+extern int temperatura_alvo;   // em graus C
+extern int temperatura_atual;  // em graus C
 
 // Flags
 extern char flag_tmr0_010ms;

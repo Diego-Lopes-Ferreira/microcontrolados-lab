@@ -14,16 +14,16 @@ void configura_timers(void) {
 
   // TIMER1 (A/D)
   // T = TCY * Prescaler * (MAX - INICIAL)
-  // 1ms = 200ns * 8 * (65536 - 64911)
+  // 100ms = 200ns * 8 * (65536 - 36)
   OpenTimer1(TIMER_INT_ON &   // Interrupcao Habilitada
              T1_16BIT_RW &    // 16 bits
              T1_SOURCE_INT &  // clock interno
              T1_PS_1_8);      // 1:8
   PIR1bits.TMR1IF = 0;        // limpa flag
-  WriteTimer1(64911);
+  WriteTimer1(36);
 
-  // TIMER1 (PWM)
-  // Timer 2: Prescaller de 16
+  // TIMER2 (PWM)
+  // Postscale 1:1(x0000) | Timer2 On (1) | Prescale 1:16 (1x)
   T2CON = 0b00000111;
 }
 
@@ -87,7 +87,7 @@ void envia_numero_serial(int numero, char casas_decimais) {
   }
 }
 
-void ajusta_dc_1(unsigned int dc_cpp1) {
+void ajusta_dc_1(int dc_cpp1) {
   //  10 bits: CCPRL DC1B1 DC1B0
   //  >> 0 = 01 23456789 => % 2 = 9 => DC1B1
   //  >> 1 = 00 12345678 => % 2 = 8 => DC1B0
@@ -100,9 +100,9 @@ void ajusta_dc_1(unsigned int dc_cpp1) {
   CCP1CONbits.DC1B1 = dc_cpp1 % 2;
 }
 
-void ajusta_dc_2(unsigned int dc_cpp2) {
+void ajusta_dc_2(int dc_cpp2) {
   // dc_cpp2 = dc_cpp2 * 4 * (PR2 + 1) / 100;
-  dc_cpp2 = dc_cpp2 * 4 * (PR2 + 1) / 100;  // otimizado pois PR2 = 99
+  dc_cpp2 = dc_cpp2 * 4;  // otimizado pois PR2 = 99
   CCPR2L = (char)(dc_cpp2 >> 2);
   CCP2CONbits.DC2B0 = dc_cpp2 % 2;
   dc_cpp2 = dc_cpp2 >> 1;
@@ -118,7 +118,10 @@ void controla_temperatura(void) {
   // 10bits xxxxxx01 00000000
   valor_medido = (256 * (unsigned char)ADRESH) + (unsigned char)ADRESL;
   tensao = 5000 * (long)valor_medido / 1023;  // 0-1023 = 0-5000mV
-  temperatura_atual = (long)tensao / 10;      // LM35 = 10mV/deg
+  if (tensao > 1500) {
+    tensao = 1500;  // limite do LM35
+  }
+  temperatura_atual = (long)tensao / 10;  // LM35 = 10mV/deg
 
   pwm1_erro_anterior = pwm1_erro;
   pwm1_erro = temperatura_alvo - temperatura_atual;
@@ -130,9 +133,9 @@ void controla_temperatura(void) {
 
   pwm1 += A * (pwm1_erro - pwm1_erro_anterior) + B * (pwm1_erro);
   if (pwm1 > 100) {
-    pwm1 = 100;
+    pwm1 = 99;  // 100% fica estranho na simulacao
   }
-  if (pwm1 > 65000) {
+  if (pwm1 < 0) {
     pwm1 = 0;
   }
 }

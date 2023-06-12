@@ -54,7 +54,7 @@ void ISR_Alta_Prioridade(void) {
     if (maquina_ativada == 1 && ad_finalizado == 0) {
       ADCON0bits.GO_DONE = 1;  // inicia conversao A/D
     }
-    WriteTimer1(64911);
+    WriteTimer1(36);
     PIR1bits.TMR1IF = 0;
   } else if (PIR1bits.ADIF) {
     ad_finalizado = 1;

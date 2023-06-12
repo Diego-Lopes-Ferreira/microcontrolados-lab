@@ -15,8 +15,8 @@ void configura_timers(void);
 void configura_perifericos(void);
 void envia_serial(const rom char* mensagem);
 void envia_numero_serial(int numero, char tres_casas);
-void ajusta_dc_1(unsigned int dc_cpp1);
-void ajusta_dc_2(unsigned int dc_cpp2);
+void ajusta_dc_1(int dc_cpp1);
+void ajusta_dc_2(int dc_cpp2);
 void controla_temperatura(void);
 
 // teclado.c
