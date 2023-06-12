@@ -65,17 +65,12 @@ void main(void) {
   TRISD = 0b00000000;        // Display LCD
   TRISE = 0b00000000;        // Display LCD
   INTCON2bits.NOT_RBPU = 0;  // Habilita pull-ups PORTB
-
-  RCONbits.IPEN = 1;  // habilita prioridade
+  RCONbits.IPEN = 1;         // habilita prioridade
   configura_timers();
   configura_perifericos();
   INTCONbits.GIEL = 1;  // habilita interrupcoes de perifericos
   INTCONbits.GIEH = 1;  // habilita interrupcoes geral
-
   inicializa_lcd();
-  // ajusta_dc_1(pwm1);
-  // ajusta_dc_2(pwm2);
-
   envia_serial("=====\n\r");
   while (1) {
     if (maquina_ativada == 1) {
@@ -86,7 +81,7 @@ void main(void) {
       pwm1 = 50;
       ajusta_dc_1(pwm1);
       pwm2 = 30;  // Aquecedor ligado
-      ajusta_dc_2(pwm2);
+      ajusta_dc_2(50);
     } else {
       pwm1 = 0;
       ajusta_dc_1(pwm1);
@@ -122,11 +117,11 @@ void main(void) {
     if (flag_tmr0_1s == 1) {
       if (monitoramento_ativado == 1) {
         // “00:00:00 [005] PWM1=000%  PWM2=000%  V=0000mV  T=000C”
-        envia_numero_serial(horas, 2);
+        envia_numero_serial((int)horas, 2);
         envia_serial(":");
-        envia_numero_serial(minutos, 2);
+        envia_numero_serial((int)minutos, 2);
         envia_serial(":");
-        envia_numero_serial(segundos, 2);
+        envia_numero_serial((int)segundos, 2);
 
         envia_serial(" [005] PWM1=");
         envia_numero_serial(pwm1, 3);
