@@ -130,7 +130,6 @@ void main(void) {
       => D = pwm * 62 / 100
     */
     ajusta_dc(pwm_lampada * 4 * 62 / 100, pwm_ventoinha * 4 * 62 / 100);
-    analogwrite(255);
 
     // Limpar as flags:
     if (btn0Pressionado == 1) {
