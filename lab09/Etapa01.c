@@ -34,13 +34,13 @@ void ISR_Alta_Prioridade(void) {
     if (modo == 0) {
       // CPPR = (1/440) / (200ns * 8) = 1420 = 0x058C
       modo = 1;
-      CCPR1H = 0x05;  // 440Hz
-      CCPR1L = 0x8C;
+      CCPR1H = 0x01;  // 440Hz
+      CCPR1L = 0x63;
     } else if (modo == 1) {
       // CPPR = (1/880) / (200ns * 8) = 710  = 0x02C6
       modo = 0;
-      CCPR1H = 0x02;  // 880Hz
-      CCPR1L = 0xC6;
+      CCPR1H = 0x05;  // 880Hz
+      CCPR1L = 0x8C;
     }
 
     WriteTimer0(55771);
@@ -93,8 +93,8 @@ void main(void) {
   IPR1bits.CCP1IP = 1;  // prioridade: alta
   PIR1bits.CCP1IF = 0;  // flag
   // CPPR = Tempo_alvo / (TCY * Prescaler_timer)
-  // CPPR = (1/440) / (200ns * 8) = 1420 = 0x058C
-  // CPPR = (1/880) / (200ns * 8) = 710  = 0x02C6
+  // CPPR = (1/440) / (200ns * 8) = 1420 / 2 = 710 = 0x058C
+  // CPPR = (1/880) / (200ns * 8) = 710  / 2 = 355 = 0x0163
   CCPR1H = 0x05;
   CCPR1L = 0x8C;
 

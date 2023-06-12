@@ -110,18 +110,20 @@ void main(void) {
 
   WriteCmdXLCD(0x0C);             // Comando para desligar cursor
   WriteCmdXLCD(0x80);             // Comando para colocar na primeira linha
-  putrsXLCD("Lab 09 - Etapa 2");  // Escreve a string salva em ROM
+  putrsXLCD("Lab 09 - Etap");  // Escreve a string salva em ROM
 
   while (1) {
     WriteCmdXLCD(0x80);        // primeira linha
     putrsXLCD("Ventoinha: ");  // Escreve a string salva em ROM
-    putcXLCD(0x30 + (pwm_ventoinha / 10));
-    putcXLCD(0x30 + (pwm_ventoinha % 10));
+    putcXLCD(0x30 + (pwm_lampada / 100));
+    putcXLCD(0x30 + (pwm_lampada % 100) / 10);
+    putcXLCD(0x30 + (pwm_lampada % 100) % 10);
 
     WriteCmdXLCD(0xC0);        // segunda linha
     putrsXLCD("Lampada  : ");  // Escreve a string salva em ROM
-    putcXLCD(0x30 + (pwm_lampada / 10));
-    putcXLCD(0x30 + (pwm_lampada % 10));
+    putcXLCD(0x30 + (pwm_ventoinha / 100));
+    putcXLCD(0x30 + (pwm_ventoinha % 100) / 10);
+    putcXLCD(0x30 + (pwm_ventoinha % 100) % 10);
 
     /*
       100 = 62
@@ -133,12 +135,12 @@ void main(void) {
 
     // Limpar as flags:
     if (btn0Pressionado == 1) {
-      Delay1KTCYx(20);  // 200ns * 1000 * 20 = 4ms
+      Delay1KTCYx(100);  // 200ns * 1000 * 100 = 10ms
       btn0Pressionado = 0;
     }
 
     if (btn1Pressionado == 1) {
-      Delay1KTCYx(20);  // 200ns * 1000 * 20 = 4ms
+      Delay1KTCYx(100);  // 200ns * 1000 * 100 = 10ms
       btn1Pressionado = 0;
     }
   }
