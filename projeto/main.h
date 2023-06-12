@@ -9,6 +9,7 @@ void ajusta_horas(char* horas, char* minutos, char* segundos, char max_horas);
 void inverteLED(void);
 void lida_com_o_menu(void);
 void insere_tecla_horario(char n, char* horas, char* minutos, char* segundos);
+void insere_tecla_temperatura_alvo(char numero);
 
 // perifericos.c
 void configura_timers(void);

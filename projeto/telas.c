@@ -143,9 +143,10 @@ void tela_menu_interno(void) {
     imprime_horario(horas_alvo, minutos_alvo, segundos_alvo);
   } else if (menu_1 == 3) {
     // "00              "
-    putcXLCD(0x30 + (temperatura_alvo / 10));
-    putcXLCD(0x30 + (temperatura_alvo % 10));
-    putrsXLCD("              ");
+    putcXLCD(0x30 + (temperatura_alvo / 100));
+    putcXLCD(0x30 + ((temperatura_alvo % 100) / 10));
+    putcXLCD(0x30 + ((temperatura_alvo % 100) % 10));
+    putrsXLCD("             ");
   } else if (menu_1 == 4) {
     // "Desativar       " ou "Ativar          "
     if (monitoramento_ativado == 1) {
@@ -169,7 +170,7 @@ void tela_testes(void) {
   putcXLCD(menu_2 + 0x30);
   putrsXLCD("P:");
   putcXLCD(posicao_cursor + 0x30);
-  WriteCmdXLCD(0xC0);                         // segunda linha
+  WriteCmdXLCD(0xC0);  // segunda linha
   // putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01
   // putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02
   // putrsXLCD("C | ");                          // 4 06

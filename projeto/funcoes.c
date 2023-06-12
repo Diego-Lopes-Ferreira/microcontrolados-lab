@@ -114,9 +114,7 @@ void lida_com_o_menu(void) {
         insere_tecla_horario(tecla_digitada, &horas_alvo, &minutos_alvo,
                              &segundos_alvo);
       } else if (menu_1 == 3) {
-        if (temperatura_alvo == -1) temperatura_alvo = 0;
-        temperatura_alvo -= 10 * (temperatura_alvo / 10);
-        temperatura_alvo = (temperatura_alvo * 10) + (tecla_digitada - 0x30);
+        insere_tecla_temperatura_alvo(tecla_digitada);
       }
     }
   }  // if (menu_1 > 0 && menu_2 == 1)
@@ -139,4 +137,24 @@ void insere_tecla_horario(char n, char* horas, char* minutos, char* segundos) {
   }
   posicao_cursor += 1;
   if (posicao_cursor == 7) posicao_cursor = 1;
+}
+
+void insere_tecla_temperatura_alvo(char numero) {
+  numero -= 0x30;
+  if (posicao_cursor == 1) {
+    if (numero > 1) numero = 1;
+    temperatura_alvo -= (temperatura_alvo / 100) * 100;
+    temperatura_alvo += 100 * numero;
+  } else if (posicao_cursor == 2) {
+    if (temperatura_alvo / 100 > 0 && numero > 5) numero = 5;
+    temperatura_alvo -= ((temperatura_alvo / 10) % 10) * 10;
+    temperatura_alvo += 10 * numero;
+  } else if (posicao_cursor == 3) {
+    temperatura_alvo -= temperatura_alvo % 10;
+    temperatura_alvo += numero;
+  }
+  if (temperatura_alvo > 150) temperatura_alvo = 150;
+
+  posicao_cursor += 1;
+  if (posicao_cursor > 3) posicao_cursor = 1;
 }
