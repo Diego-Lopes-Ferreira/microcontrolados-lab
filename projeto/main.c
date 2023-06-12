@@ -58,7 +58,7 @@ char aux_tmr0_100 = 0;
 char ad_finalizado = 0;
 
 void main(void) {
-  // 1 - saida | 0 - entrada
+  // 1 - entrada | 0 - saida
   TRISA = 0b00000001;        // Sensor de temperatura em RA0
   TRISB = 0b11110000;        // Teclado matricial
   TRISC = 0b00000000;        // Saidas do PWM
