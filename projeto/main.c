@@ -19,7 +19,7 @@ char minutos_maq = 0;
 char segundos_maq = 0;
 char horas_alvo = 0;
 char minutos_alvo = 0;
-char segundos_alvo = 0;
+char segundos_alvo = 9;
 
 // Estados do Menu
 char menu_1 = 0;
