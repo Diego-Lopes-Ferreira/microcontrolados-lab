@@ -49,8 +49,10 @@ char temperatura_atual = 0;  // em graus C
 
 // Flags
 char flag_tmr0_010ms = 0;
+char flag_tmr0_050ms = 0;
 char flag_tmr0_500ms = 0;
 char flag_tmr0_1s = 0;
+char aux_tmr0_005 = 0;
 char aux_tmr0_050 = 0;
 char aux_tmr0_100 = 0;
 char ad_finalizado = 0;
@@ -75,20 +77,30 @@ void main(void) {
   // ajusta_dc_2(pwm2);
 
   while (1) {
-    if (ad_finalizado == 1) {
-      if (maquina_ativada == 1) {
-        controla_temperatura();
-      } else {
-        pwm1 = 0;
-        pwm2 = 0;
+    if (maquina_ativada == 1) {
+      if (ad_finalizado == 1) {
+        controla_temperatura();  // pwm1 = controle
+        ad_finalizado = 0;
       }
-      ajusta_dc_1(pwm1);
-      ajusta_dc_2(pwm2);
-      ad_finalizado = 0;
+      pwm2 = 30;  // Aquecedor ligado
+    } else {
+      pwm1 = 0;
+      pwm2 = 0;
     }
+    ajusta_dc_1(pwm1);
+    ajusta_dc_2(pwm2);
 
     if (flag_tmr0_010ms == 1) {
       flag_tmr0_1s = 0;
+    }
+
+    if (flag_tmr0_050ms == 1) {
+      lida_com_o_menu();
+      ajusta_horas(&horas, &minutos, &segundos, 24);
+      ajusta_horas(&horas_maq, &minutos_maq, &segundos_maq, 99);
+      ajusta_horas(&horas_alvo, &minutos_alvo, &segundos_alvo, 99);
+      atualiza_menu();
+      flag_tmr0_010ms = 0;
     }
 
     if (flag_tmr0_500ms == 1) {
@@ -100,18 +112,11 @@ void main(void) {
       }
 
       pisca_tempo_restante = !pisca_tempo_restante;
-
       flag_tmr0_500ms = 0;
     }
 
-    if (flag_tmr0_010ms == 1) {
-      lida_com_o_menu();
-      ajusta_horas(&horas, &minutos, &segundos, 24);
-      ajusta_horas(&horas_maq, &minutos_maq, &segundos_maq, 99);
-      ajusta_horas(&horas_alvo, &minutos_alvo, &segundos_alvo, 99);
-      atualiza_menu();
-
-      if (monitoramento_ativado == 1) {
+    if (flag_tmr0_1s == 1) {
+      if (monitoramento_ativado == 1 && maquina_ativada == 1) {
         // "DADO pwm: 100 ccp: 100 temp: 100"
         envia_serial("DADO pwm:");
         envia_serial("10");
@@ -121,14 +126,7 @@ void main(void) {
         envia_numero_serial(temperatura_atual, 0);
         envia_serial("'\n\r");
       }
-      flag_tmr0_010ms = 0;
-    }
-
-    // Aquecedor desliga com a maquina
-    if (maquina_ativada == 1) {
-      pwm2 = 30;
-    } else {
-      pwm2 = 0;
+      flag_tmr0_1s = 0;
     }
   }
 }

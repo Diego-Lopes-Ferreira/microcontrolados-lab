@@ -37,8 +37,10 @@ extern char temperatura_atual;  // em graus C
 
 // Flags
 extern char flag_tmr0_010ms;
+extern char flag_tmr0_050ms;
 extern char flag_tmr0_500ms;
 extern char flag_tmr0_1s;
+extern char aux_tmr0_005;
 extern char aux_tmr0_050;
 extern char aux_tmr0_100;
 extern char ad_finalizado;

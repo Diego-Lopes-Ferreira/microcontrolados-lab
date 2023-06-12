@@ -17,9 +17,16 @@ void ISR_Alta_Prioridade(void) {
   if (INTCONbits.TMR0IF) {
     aux_tmr0_100++;
     aux_tmr0_050++;
+    aux_tmr0_005++;
 
     // Flag de 10ms (sempre acontece)
     flag_tmr0_010ms = 1;
+
+    // Flag de 50ms
+    if (aux_tmr0_005 == 4) {
+      flag_tmr0_050ms = 1;
+      aux_tmr0_005 = 0;
+    }
 
     // Flag de 500ms
     if (aux_tmr0_050 == 49) {
