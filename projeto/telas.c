@@ -200,20 +200,20 @@ void lcd_pisca_indicador_cursor(void) {
   // Pisca o caracter na posicao do cursor a cada 0,5s
   // (coloca um espaco no lugar dele)
   char i = 0;
-  char outra_coisa = 0;
+  char iteracoes = 0;
   if (pisca_tempo_restante == 0) {
     return;
   }
 
-  if (posicao_cursor == 1) outra_coisa = 0;  // "0
-  if (posicao_cursor == 2) outra_coisa = 1;  // "00
-  if (posicao_cursor == 3) outra_coisa = 3;  // "00:0
-  if (posicao_cursor == 4) outra_coisa = 4;  // "00:00
-  if (posicao_cursor == 5) outra_coisa = 6;  // "00:00:0
-  if (posicao_cursor == 6) outra_coisa = 7;  // "00:00:00
+  if (posicao_cursor == 1) iteracoes = 0;  // "0
+  if (posicao_cursor == 2) iteracoes = 1;  // "00
+  if (posicao_cursor == 3) iteracoes = 3;  // "00:0
+  if (posicao_cursor == 4) iteracoes = 4;  // "00:00
+  if (posicao_cursor == 5) iteracoes = 6;  // "00:00:0
+  if (posicao_cursor == 6) iteracoes = 7;  // "00:00:00
 
   WriteCmdXLCD(0xC0);  // segunda linha
-  for (i = 0; i < outra_coisa; i++) {
+  for (i = 0; i < iteracoes; i++) {
     WriteCmdXLCD(0x14);  // desloca cursor direita
   }
   putrsXLCD(" ");
