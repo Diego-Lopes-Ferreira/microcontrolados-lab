@@ -63,18 +63,19 @@ void tela_menu_externo(void) {
   } else {  // maquina ligada
 
     // "0000mV 00C  100%"
-    putcXLCD(0x30 + (tensao / 1000));               // 1 00 "0               "
-    putcXLCD(0x30 + (tensao % 1000) / 100);         // 1 00 "00              "
-    putcXLCD(0x30 + ((tensao % 1000) % 100) / 10);  // 1 00 "000             "
-    putcXLCD(0x30 + ((tensao % 1000) % 100) % 10);  // 1 00 "0000            "
-    putrsXLCD("mV=");                               // 5 00 "0000mV=         "
-    putcXLCD(0x30 + (temperatura_atual / 10));      // 1 01 "0000mV=0        "
-    putcXLCD(0x30 + (temperatura_atual % 10));      // 1 02 "0000mV=00       "
-    putrsXLCD("C  ");                               // 2 04 "0000mV=00C      "
-    putcXLCD(0x30 + (pwm1 / 100));                  // 1 00 "0000mV=00C  1   "
-    putcXLCD(0x30 + (pwm1 % 100) / 10);             // 1 00 "0000mV=00C  10  "
-    putcXLCD(0x30 + (pwm1 % 100) % 10);             // 1 00 "0000mV=00C  100 "
-    putrsXLCD("%");                                 // 1 00 "0000mV=00C  100%"
+    putcXLCD(0x30 + (tensao / 1000));                 // 1 00 "0               "
+    putcXLCD(0x30 + (tensao % 1000) / 100);           // 1 00 "00              "
+    putcXLCD(0x30 + ((tensao % 1000) % 100) / 10);    // 1 00 "000             "
+    putcXLCD(0x30 + ((tensao % 1000) % 100) % 10);    // 1 00 "0000            "
+    putrsXLCD("mV=");                                 // 5 00 "0000mV=         "
+    putcXLCD(0x30 + (temperatura_atual / 100));       // 1 01 "0000mV=0        "
+    putcXLCD(0x30 + (temperatura_atual % 100) / 10);  // 1 01 "0000mV=00       "
+    putcXLCD(0x30 + (temperatura_atual % 100) % 10);  // 1 02 "0000mV=000      "
+    putrsXLCD("C ");                                  // 2 04 "0000mV=000C     "
+    putcXLCD(0x30 + (pwm1 / 100));                    // 1 00 "0000mV=000C 1   "
+    putcXLCD(0x30 + (pwm1 % 100) / 10);               // 1 00 "0000mV=000C 10  "
+    putcXLCD(0x30 + (pwm1 % 100) % 10);               // 1 00 "0000mV=000C 100 "
+    putrsXLCD("%");                                   // 1 00 "0000mV=000C 100%"
   }
 }
 
