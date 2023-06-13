@@ -1,14 +1,14 @@
+// projeto/telas.c
+
 #include "globals.h"
 #include "main.h"
 
 void inicializa_lcd(void) {
-  OpenXLCD(FOUR_BIT & LINES_5X7);  // Comunicacao nibble e linha para cursor
-  WriteCmdXLCD(0x01);              // comando para limpar a tela
-  Delay10KTCYx(8);  // Delay da inicializacao do LCD (10000*200ns*8 = 16ms)
+  OpenXLCD(FOUR_BIT & LINES_5X7);
+  WriteCmdXLCD(0x01);  // Limpa a tela
+  Delay10KTCYx(8);     // Delay da inicializacao do LCD (10000*200ns*8 = 16ms)
 
-  WriteCmdXLCD(0x0C);    // desliga cursor
-  WriteCmdXLCD(0x80);    // primeira linha
-  putrsXLCD("Projeto");  // Escreve a string salva em ROM
+  WriteCmdXLCD(0x0C);  // desliga cursor
 }
 
 void atualiza_menu(void) {
@@ -31,7 +31,6 @@ void atualiza_menu(void) {
 }
 
 void tela_alarme(void) {
-  WriteCmdXLCD(0x0C);  // desliga cursor
   // "00:00:00        "
   // "Fim Ciclo       "
   WriteCmdXLCD(0x80);  // primeira linha
@@ -45,8 +44,7 @@ void tela_alarme(void) {
 }
 
 void tela_menu_externo(void) {
-  WriteCmdXLCD(0x0C);  // desliga cursor
-  //  Ligada               Pausada              Desligada
+  // Ligada               Pausada              Desligada
   // "00:00:00        " | "00:00:00        " | "12:34:56        "
   // "00C | 00mA | 00%" | "Maquina OFF*    " | "Maquina OFF     "
   WriteCmdXLCD(0x80);  // primeira linha
@@ -89,7 +87,6 @@ void tela_menu_externo(void) {
 }
 
 void tela_menu_interno(void) {
-  WriteCmdXLCD(0x0C);  // desliga cursor
   WriteCmdXLCD(0x80);  // primeira linha
   if (menu_1 == 1) {
     // "[1/4] Horario   "
@@ -120,7 +117,7 @@ void tela_menu_interno(void) {
     }
   } else if (menu_1 == 4) {
     // "[4/4] Dados:OFF "
-    // "[4/4] Dados:OFF*"
+    // "[4/4] Dados:ON  "
     putrsXLCD("[4/4] Dados:");
     if (monitoramento_ativado == 1) {
       putrsXLCD("ON ");
@@ -142,7 +139,7 @@ void tela_menu_interno(void) {
     // "00:00:00        "
     imprime_horario(horas_alvo, minutos_alvo, segundos_alvo);
   } else if (menu_1 == 3) {
-    // "00              "
+    // "000             "
     putcXLCD(0x30 + (temperatura_alvo / 100));
     putcXLCD(0x30 + ((temperatura_alvo % 100) / 10));
     putcXLCD(0x30 + ((temperatura_alvo % 100) % 10));
@@ -158,28 +155,18 @@ void tela_menu_interno(void) {
 }
 
 void tela_testes(void) {
-  WriteCmdXLCD(0x0C);  // desliga cursor
-  // " 'F' 1:0 2:0    "
+  // "'F' 1:0 2:0 P:0"
   // "00C | 00mA | 00%"
   WriteCmdXLCD(0x80);  // primeira linha
   putrsXLCD("'");
   putcXLCD(tecla_digitada);
   putrsXLCD("'1:");
   putcXLCD(menu_1 + 0x30);
-  putrsXLCD("2:");
+  putrsXLCD(" 2:");
   putcXLCD(menu_2 + 0x30);
-  putrsXLCD("P:");
+  putrsXLCD(" P:");
   putcXLCD(posicao_cursor + 0x30);
   WriteCmdXLCD(0xC0);  // segunda linha
-  // putcXLCD(0x30 + (temperatura_atual / 10));  // 1 01
-  // putcXLCD(0x30 + (temperatura_atual % 10));  // 1 02
-  // putrsXLCD("C | ");                          // 4 06
-  // putcXLCD(0x30 + (temperatura_atual / 10));  // 1 07
-  // putcXLCD(0x30 + (temperatura_atual % 10));  // 1 08
-  // putrsXLCD("mA | ");                         // 5 13
-  // putcXLCD(0x30 + (pwm1 / 10));               // 1 14
-  // putcXLCD(0x30 + (pwm1 % 10));               // 1 15
-  // putrsXLCD("%");                             // 1 16
   imprime_horario(horas, minutos, segundos);
 }
 

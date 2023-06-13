@@ -1,3 +1,5 @@
+// projeto/globals.h
+
 // Tempos
 extern char horas;
 extern char minutos;
@@ -16,7 +18,6 @@ extern char posicao_cursor;
 extern char tecla_pressionada;
 extern char tecla_digitada;
 extern char pisca_tempo_restante;
-extern char acao_usuario;
 
 // Estados da Maquina
 extern char maquina_ativada;
@@ -29,8 +30,6 @@ extern int pwm1;
 extern int pwm1_anterior;
 extern int pwm1_erro;
 extern int pwm2;
-extern int pwm2_anterior;
-extern int pwm2_erro;
 extern long tensao;
 extern int temperatura_alvo;   // em graus C
 extern int temperatura_atual;  // em graus C

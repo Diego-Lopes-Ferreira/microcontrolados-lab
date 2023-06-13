@@ -1,3 +1,5 @@
+// projeto/perifericos.c
+
 #include "globals.h"
 #include "main.h"
 
@@ -15,16 +17,12 @@ void configura_timers(void) {
   // TIMER1 (A/D)
   // T = TCY * Prescaler * (MAX - INICIAL)
   // 100ms = 200ns * 8 * (65536 - 36)
-
-  // NOTE(DIEGO): Por alguma razao a funcao pronta trava o PWM2, entao
-  //              o TMR1 sera configurado na mao mesmo...
-
   // 16bits (1) | Clock not from tmr1 osc (0) | Prescale 1:8 (11)
-  // Enable tmr1 osc (0) | Sync (x) | Clock Source internal (0) | On/Off (1)
+  // Habilita osc do tmr1 (0) | Sync (x) | Clock Source interna (0) | On/Off (1)
   T1CON = 0b10110001;
-  PIE1bits.TMR1IE = 1;  // liga interrupcao
-  PIR1bits.TMR1IF = 0;  // limpa flag
-  TMR1H = 0;
+  PIE1bits.TMR1IE = 1;  // Liga interrupcao
+  PIR1bits.TMR1IF = 0;  // Limpa flag
+  TMR1H = 0;            // Reseta o valor
   TMR1L = 36;
 
   // TIMER2 (PWM)
@@ -37,8 +35,8 @@ void configura_perifericos(void) {
   TXSTAbits.SYNC = 0;     // Modo assincrono
   BAUDCONbits.BRG16 = 0;  // 8-bit Baud Rate Generator
   TXSTAbits.BRGH = 1;     // Baud rate = high speed
-  RCSTAbits.SPEN = 1;     // Serial port enabled
-  TXSTAbits.TXEN = 1;     // Transmit enabled
+  RCSTAbits.SPEN = 1;     // Habilita porta serial
+  TXSTAbits.TXEN = 1;     // Habilita envio
   // n = [Fosc / (16 * BAUDRATE)] - 1
   // n = [20000000 / (16 * 19200)] - 1
   SPBRG = 0x40;  // 64 = 19200 bits/s
@@ -49,8 +47,8 @@ void configura_perifericos(void) {
   ADCON1 = 0b00001110;  // Vref-=Vss e Vref+=Vdd (xx00) | RA0 analogico (1110)
   ADCON2 = 0b10111101;  // Direita (1x) | Taq: 20 (111) | Fosc/16 (101)
   PIE1bits.ADIE = 1;    // Interrupcao habilitada
-  IPR1bits.ADIP = 1;    // alta prioridade
-  PIR1bits.ADIF = 0;    // limpa flag
+  IPR1bits.ADIP = 1;    // Alta prioridade
+  PIR1bits.ADIF = 0;    // Limpa flag
 
   // PWM
   // Timer 2: Prescaller de 16
@@ -61,33 +59,30 @@ void configura_perifericos(void) {
 }
 
 void envia_serial(const rom char* mensagem) {
+  // Envia uma string byte a byte
   while (*mensagem) {
-    while (TXSTAbits.TRMT == 0) {
-    }
+    while (TXSTAbits.TRMT == 0) {}
     TXREG = *mensagem;
     mensagem++;
   }
 }
 
-void envia_numero_serial(int numero, char casas_decimais) {
-  if (casas_decimais >= 4) {
-    while (TXSTAbits.TRMT == 0) {
-    }
+void envia_numero_serial(int numero, char casas) {
+  // Envia um numero, de acordo com a quantidade de casas
+  if (casas >= 4) {
+    while (TXSTAbits.TRMT == 0) {}
     TXREG = 0x30 + numero / 1000;  // X000
   }
-  if (casas_decimais >= 3) {
-    while (TXSTAbits.TRMT == 0) {
-    }
+  if (casas >= 3) {
+    while (TXSTAbits.TRMT == 0) {}
     TXREG = 0x30 + (numero % 1000) / 100;  // 0X00
   }
-  if (casas_decimais >= 2) {
-    while (TXSTAbits.TRMT == 0) {
-    }
+  if (casas >= 2) {
+    while (TXSTAbits.TRMT == 0) {}
     TXREG = 0x30 + ((numero % 1000) % 100) / 10;  // 00X0
   }
-  if (casas_decimais >= 1) {
-    while (TXSTAbits.TRMT == 0) {
-    }
+  if (casas >= 1) {
+    while (TXSTAbits.TRMT == 0) {}
     TXREG = 0x30 + ((numero % 1000) % 100) % 10;  // 000X
   }
 }
@@ -97,6 +92,7 @@ void ajusta_dc_1(int dc_cpp1) {
   //  >> 0 = 01 23456789 => % 2 = 9 => DC1B1
   //  >> 1 = 00 12345678 => % 2 = 8 => DC1B0
   //  >> 2 = 00 01234567 => (char) = 01234567 => CCPRL
+
   // dc_cpp1 = dc_cpp1 * 4 * (PR2 + 1) / 100;
   dc_cpp1 = dc_cpp1 * 4;  // otimizado pois PR2 = 99
   CCPR1L = (char)(dc_cpp1 >> 2);
@@ -138,7 +134,7 @@ void controla_temperatura(void) {
 
   pwm1 += A * (pwm1_erro - pwm1_erro_anterior) + B * (pwm1_erro);
   if (pwm1 > 100) {
-    pwm1 = 99;  // 100% fica estranho na simulacao
+    pwm1 = 100;
   }
   if (pwm1 < 0) {
     pwm1 = 0;

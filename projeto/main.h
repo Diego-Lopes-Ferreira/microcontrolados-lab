@@ -1,5 +1,6 @@
+// projeto/main.h
+
 #include <P18F4550.H>
-#include <delays.h>
 #include <timers.h>
 
 #include "xlcd_exsto.h"
@@ -15,13 +16,13 @@ void insere_tecla_temperatura_alvo(char numero);
 void configura_timers(void);
 void configura_perifericos(void);
 void envia_serial(const rom char* mensagem);
-void envia_numero_serial(int numero, char tres_casas);
+void envia_numero_serial(int numero, char casas);
 void ajusta_dc_1(int dc_cpp1);
 void ajusta_dc_2(int dc_cpp2);
 void controla_temperatura(void);
 
 // teclado.c
-char getKey(void);  // prototipo da funcao
+char getKey(void);
 
 // telas.c
 void inicializa_lcd(void);

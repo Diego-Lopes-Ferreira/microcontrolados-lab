@@ -1,9 +1,10 @@
+// projeto/teclado.c
+
 #include "globals.h"
 #include "main.h"
 
 char getKey(void) {
   /*
-  Saidas: char (' ' = leitura vazia)
   1. Desativa a coluna 3 (RB0 = 0) e verifica as linhas
   2. Desativa a coluna 2 (RB1 = 0) e verifica as linhas
   3. Desativa a coluna 1 (RB2 = 0) e verifica as linhas
@@ -12,7 +13,7 @@ char getKey(void) {
 
   char k = ' ';
 
-  LATB = 0b11111110;  // Habilita Coluna 3
+  LATB = 0b11111110;
   Nop();
   Nop();
   if (PORTBbits.RB4 == 0) {
@@ -25,7 +26,7 @@ char getKey(void) {
     k = 'D';
   }
 
-  LATB = 0b11111101;  // Habilita Coluna 2
+  LATB = 0b11111101;
   Nop();
   Nop();
   if (PORTBbits.RB4 == 0) {
@@ -38,7 +39,7 @@ char getKey(void) {
     k = 'E';
   }
 
-  LATB = 0b11111011;  // Habilita Coluna 1
+  LATB = 0b11111011;
   Nop();
   Nop();
   if (PORTBbits.RB4 == 0) {
@@ -51,7 +52,7 @@ char getKey(void) {
     k = '0';
   }
 
-  LATB = 0b11110111;  // Habilita Coluna 0
+  LATB = 0b11110111;
   Nop();
   Nop();
   if (PORTBbits.RB4 == 0) {

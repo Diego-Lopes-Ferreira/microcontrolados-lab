@@ -19,7 +19,7 @@ char minutos_maq = 0;
 char segundos_maq = 0;
 char horas_alvo = 0;
 char minutos_alvo = 0;
-char segundos_alvo = 59;
+char segundos_alvo = 0;
 
 // Estados do Menu
 char menu_1 = 0;
@@ -28,12 +28,11 @@ char posicao_cursor = 0;
 char tecla_pressionada = 0;
 char tecla_digitada = ' ';
 char pisca_tempo_restante = 0;
-char acao_usuario = 0;
 
 // Estados da Maquina
 char maquina_ativada = 0;
 char tempo_pausado = 0;
-char monitoramento_ativado = 1;
+char monitoramento_ativado = 0;
 char alarme_ligado = 0;
 
 // Estados do Controle
@@ -41,10 +40,8 @@ int pwm1 = 0;  // RC2=Cooler
 int pwm1_anterior = 0;
 int pwm1_erro = 0;
 int pwm2 = 0;  // RC1=Aquecedo
-int pwm2_anterior = 0;
-int pwm2_erro = 0;
 long tensao = 0;
-int temperatura_alvo = 80;  // em graus C
+int temperatura_alvo = 0;   // em graus C
 int temperatura_atual = 0;  // em graus C
 
 // Flags
@@ -88,10 +85,6 @@ void main(void) {
       ajusta_dc_2(pwm2);
     }
 
-    if (flag_tmr0_010ms == 1) {
-      flag_tmr0_1s = 0;
-    }
-
     if (flag_tmr0_050ms == 1) {
       lida_com_o_menu();
       ajusta_horas(&horas, &minutos, &segundos, 24);
@@ -105,7 +98,7 @@ void main(void) {
       if (alarme_ligado == 1) {
         inverteLED();
       } else {
-        PORTAbits.RA3 = 0;
+        PORTAbits.RA3 = 0;  // Desliga LED
         PORTAbits.RA5 = 0;
       }
 
@@ -115,14 +108,14 @@ void main(void) {
 
     if (flag_tmr0_1s == 1) {
       if (monitoramento_ativado == 1) {
-        // “00:00:00 [005] PWM1=000%  PWM2=000%  V=0000mV  T=000C”
+        // “12:34:56 PWM1=000%  PWM2=000%  V=0000mV  T=000C”
         envia_numero_serial((int)horas, 2);
         envia_serial(":");
         envia_numero_serial((int)minutos, 2);
         envia_serial(":");
         envia_numero_serial((int)segundos, 2);
 
-        envia_serial(" [005] PWM1=");
+        envia_serial(" PWM1=");
         envia_numero_serial(pwm1, 3);
         envia_serial("% PWM2=");
         envia_numero_serial(pwm2, 3);
