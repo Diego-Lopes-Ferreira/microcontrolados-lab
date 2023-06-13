@@ -205,12 +205,13 @@ void lcd_pisca_indicador_cursor(void) {
     return;
   }
 
-  if (posicao_cursor == 1) iteracoes = 0;  // "0
-  if (posicao_cursor == 2) iteracoes = 1;  // "00
-  if (posicao_cursor == 3) iteracoes = 3;  // "00:0
-  if (posicao_cursor == 4) iteracoes = 4;  // "00:00
-  if (posicao_cursor == 5) iteracoes = 6;  // "00:00:0
-  if (posicao_cursor == 6) iteracoes = 7;  // "00:00:00
+  if (posicao_cursor == 1) iteracoes = 0;                 // "0
+  if (posicao_cursor == 2) iteracoes = 1;                 // "00
+  if (posicao_cursor == 3 && menu_1 == 3) iteracoes = 2;  // "000 (temperatura)
+  if (posicao_cursor == 3 && menu_1 != 3) iteracoes = 3;  // "00:0   (horarios)
+  if (posicao_cursor == 4) iteracoes = 4;                 // "00:00
+  if (posicao_cursor == 5) iteracoes = 6;                 // "00:00:0
+  if (posicao_cursor == 6) iteracoes = 7;                 // "00:00:00
 
   WriteCmdXLCD(0xC0);  // segunda linha
   for (i = 0; i < iteracoes; i++) {
