@@ -108,7 +108,7 @@ void main(void) {
 
     if (flag_tmr0_1s == 1) {
       if (monitoramento_ativado == 1) {
-        // “12:34:56 PWM1=000%  PWM2=000%  V=0000mV  T=000C”
+        // "12:34:56 PWM1=000%  PWM2=000%  V=0000mV  T=000C"
         envia_numero_serial((int)horas, 2);
         envia_serial(":");
         envia_numero_serial((int)minutos, 2);
