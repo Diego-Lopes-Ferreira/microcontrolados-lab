@@ -112,9 +112,9 @@ void ajusta_dc_2(int dc_cpp2) {
 
 void controla_temperatura(void) {
   long valor_medido;
-  unsigned int pwm1_erro_anterior;
-  unsigned int A = 1;
-  unsigned int B = 2;
+  int pwm1_erro_anterior;
+  int A = -1;
+  int B = -2;
 
   // 10bits xxxxxx01 00000000
   valor_medido = (256 * (unsigned char)ADRESH) + (unsigned char)ADRESL;
