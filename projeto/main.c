@@ -91,7 +91,7 @@ void main(void) {
       ajusta_horas(&horas_maq, &minutos_maq, &segundos_maq, 99);
       ajusta_horas(&horas_alvo, &minutos_alvo, &segundos_alvo, 99);
       atualiza_menu();
-      flag_tmr0_010ms = 0;
+      flag_tmr0_050ms = 0;
     }
 
     if (flag_tmr0_500ms == 1) {
