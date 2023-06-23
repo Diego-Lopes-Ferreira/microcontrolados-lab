@@ -40,7 +40,7 @@ void lida_com_o_menu(void) {
   // Funcao que interpreta as acoes do usuario
   tecla_digitada = getKey();
 
-  // Caso nada esteja pressionado, reset do estado intero
+  // Caso nada esteja pressionado, reset do estado interno
   if (tecla_digitada == ' ') {
     if (tecla_pressionada == 1) tecla_pressionada = 0;
     return;
